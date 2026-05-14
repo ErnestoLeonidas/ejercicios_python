@@ -1,6 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+/* ═══ Theme toggle (persistido en localStorage) ═══════════════════════════
+   Aplicamos el tema guardado lo antes posible para evitar flash al cargar.
+*/
+(function () {
+  var KEY = 'fpy1101-theme';
+  try {
+    var saved = localStorage.getItem(KEY);
+    if (saved === 'light' || saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', saved);
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  } catch (e) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      var next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem(KEY, next); } catch (e) { /* ignore */ }
+    });
+  });
+})();
+</script>
+
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FPY1101 — Fundamentos de Programación (Python)</title>
@@ -409,6 +439,86 @@ body {
 .sub-items .sub-items { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
 .sub-items .sub-group.open > .sub-items { max-height: 800px; }
 
+/* ═══ TEMA CLARO (toggle por html[data-theme="light"]) ═══════════════════
+   Override las variables del tema oscuro para el modo claro. Los componentes
+   ya usan estas vars, así que el cambio se propaga automáticamente.
+*/
+html[data-theme="light"] {
+  --bg:        #f6f8fb;
+  --surface:   #ffffff;
+  --surface2:  #f1f4f9;
+  --surface3:  #e6ebf3;
+  --border:    #dfe5ee;
+  --border2:   #c8d1de;
+  --accent:    #0284c7;
+  --accent-dim:#bae6fd;
+  --pink:      #be185d;
+  --green:     #15803d;
+  --yellow:    #b45309;
+  --text:      #1a2330;
+  --muted:     #64748b;
+  --muted2:    #475569;
+  --code-bg:   #0f172a;       /* el bloque de código se mantiene oscuro */
+  --e-color:   #0284c7;
+  --p-color:   #b45309;
+  --s-color:   #15803d;
+}
+
+/* En tema claro, ajustes específicos para componentes con colores hardcodeados */
+html[data-theme="light"] .b-diff.bd1 { background:#dcfce7; color:#15803d; border-color:#86efac; }
+html[data-theme="light"] .b-diff.bd2 { background:#fef3c7; color:#b45309; border-color:#fcd34d; }
+html[data-theme="light"] .b-diff.bd3 { background:#fce7f3; color:#be185d; border-color:#f9a8d4; }
+html[data-theme="light"] .consola-wrap { background:#0b1220; border-color:#1e3a8a33; }
+html[data-theme="light"] .consola-bar { background:#111a2e; border-bottom-color:#1e293b; }
+html[data-theme="light"] .consola-lbl { color:#94a3b8; }
+html[data-theme="light"] .code-block { color:#cbd5e1; }
+html[data-theme="light"] .cl-out { color:#86efac; }
+html[data-theme="light"] .cl-in  { color:#fcd34d; }
+html[data-theme="light"] .hdr-badge { color:#fff; }
+html[data-theme="light"] ::-webkit-scrollbar-track { background:#e6ebf3; }
+html[data-theme="light"] ::-webkit-scrollbar-thumb { background:#c8d1de; }
+html[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background:#94a3b8; }
+html[data-theme="light"] .tip-block { background:rgba(2,132,199,.06); border-color:rgba(2,132,199,.18); }
+html[data-theme="light"] .btn-reveal-code { background:#fafbfd; }
+html[data-theme="light"] .btn-reveal-code:hover { background:rgba(2,132,199,.04); }
+html[data-theme="light"] .btn-reveal-code.active { background:rgba(2,132,199,.06); }
+html[data-theme="light"] .code-topbar { background:#f1f4f9; }
+html[data-theme="light"] .code-lang { background:rgba(2,132,199,.12); border-color:#7dd3fc; }
+
+/* transición suave del cambio de tema */
+html, body, .sidebar, .app-header, .main-panel, .cblock, .cblock-hdr,
+.cblock-body, .nav-item, .btn-nav, .b-tag, .ex-ea-ribbon, .tip-block,
+.sidebar-foot, .pb-wrap, .code-topbar, .code-block, .btn-reveal-code {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+
+/* ═══ BOTÓN OJO (toggle de tema) ═════════════════════════════════════════ */
+.theme-toggle {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--muted2);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all .15s ease;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.theme-toggle svg { width: 16px; height: 16px; display: block; }
+.theme-toggle .icon-open { display: none; }
+.theme-toggle .icon-closed { display: block; }
+html[data-theme="light"] .theme-toggle .icon-open { display: block; }
+html[data-theme="light"] .theme-toggle .icon-closed { display: none; }
+
+
+
 
   </style>
 
@@ -429,6 +539,14 @@ body {
     </div>
     <div class="hdr-sep"></div>
     <span class="hdr-progress">Resueltos: <strong id="solvedCnt">0</strong> / <span id="totalCnt">0</span></span>
+    <div class="hdr-sep"></div>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema" title="Cambiar tema (claro/oscuro)">
+      <!-- Ojo abierto: visible en tema claro -->
+      <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      <!-- Ojo tachado: visible en tema oscuro -->
+      <svg class="icon-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.5 19.5 0 0 1 5.06-5.94"></path><path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.45 19.45 0 0 1-3.17 4.21"></path><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+    </button>
+
   </div>
 </header>
 
@@ -524,6 +642,22 @@ body {
       "color": "var(--yellow)",
       "icon": "🗂️"
     },
+    {
+      "id": "2.0",
+      "label": "EA 2.0",
+      "titulo": "Parcial 2 · Ejercicio 1 — Descuentos anidados",
+      "desc": "16 variantes del Ejercicio 1 del Parcial 2: cálculo de dos valores con descuentos por dos criterios y reglas adicionales.",
+      "color": "var(--accent)",
+      "icon": "💰"
+    },
+    {
+      "id": "2.1",
+      "label": "EA 2.1",
+      "titulo": "Parcial 2 · Ejercicio 2 — Juego de adivinanza",
+      "desc": "12 variantes del Ejercicio 2 del Parcial 2: número aleatorio con randint, ajuste a par/impar/múltiplo, y 3 intentos con pistas.",
+      "color": "var(--pink)",
+      "icon": "🎲"
+    }
   ],
   "exercises": [
     {
@@ -13657,7 +13791,1838 @@ body {
 
 
 
-  ]
+  ,
+    {
+      "n": 246,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Pack de medicamentos y despacho",
+      "panelTitulo": "EA 2.0 — Variante A: Medicamentos según edad y tramo",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos",
+        "Edad",
+        "Tramo"
+      ],
+      "enunciado": "Desarrolle un programa en Python que permita calcular los valores finales del <strong>pack de medicamentos</strong> para el cuidado de la piel y el <strong>valor final de despacho</strong>, aplicando descuentos según la <em>edad</em> y el <em>tramo</em> de la persona.<br><br><strong>Valores base:</strong> Medicamentos $60.000 · Despacho $8.000.<br><br><strong>Descuentos sobre medicamentos:</strong><br>• Edad ≤ 30 · Tramo A o B → 18%<br>• Edad ≤ 30 · Tramo C o D → 12%<br>• 31 ≤ Edad ≤ 60 · Tramo A o B → 12%<br>• 31 ≤ Edad ≤ 60 · Tramo C o D → 8%<br>• Edad > 60 → 0% (sin descuento)<br><br><strong>Descuentos sobre despacho:</strong><br>• Tramo A o B → 10%<br>• Si además Edad ≥ 55 → 5% adicional",
+      "eps": [
+        {
+          "e": "edad (Entero)\ntramo (Caracter: A, B, C o D)",
+          "p": "Aplicar descuento medicamentos según edad×tramo\nAplicar descuento despacho según tramo (+5% si edad≥55)",
+          "s": "Valor final medicamentos y despacho"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese su edad:"
+        },
+        {
+          "t": "i",
+          "v": "28"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese su tramo (A, B, C o D):"
+        },
+        {
+          "t": "i",
+          "v": "A"
+        },
+        {
+          "t": "o",
+          "v": "El valor de medicamentos es: 49200"
+        },
+        {
+          "t": "o",
+          "v": "El valor del despacho es: 7200"
+        }
+      ],
+      "code": "<span class=\"kw\">def</span> <span class=\"fn\">CalcularPack</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese su edad:\"</span>)\n    <span class=\"var\">edad</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese su tramo (A, B, C o D):\"</span>)\n    <span class=\"var\">tramo</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"var\">med</span> <span class=\"op\">=</span> <span class=\"num\">60000</span>\n    <span class=\"var\">desp</span> <span class=\"op\">=</span> <span class=\"num\">8000</span>\n    <span class=\"var\">descMed</span> <span class=\"op\">=</span> <span class=\"num\">0</span>\n    <span class=\"var\">descDesp</span> <span class=\"op\">=</span> <span class=\"num\">0</span>\n\n    <span class=\"kw\">if</span> <span class=\"var\">edad</span> <span class=\"op\">&lt;=</span> <span class=\"num\">30</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">tramo</span> <span class=\"op\">==</span> <span class=\"str\">\"A\"</span> <span class=\"kw\">or</span> <span class=\"var\">tramo</span> <span class=\"op\">==</span> <span class=\"str\">\"B\"</span>:\n            <span class=\"var\">descMed</span> <span class=\"op\">=</span> <span class=\"num\">0.18</span>\n        <span class=\"kw\">else</span>:\n            <span class=\"var\">descMed</span> <span class=\"op\">=</span> <span class=\"num\">0.12</span>\n    <span class=\"kw\">elif</span> <span class=\"var\">edad</span> <span class=\"op\">&lt;=</span> <span class=\"num\">60</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">tramo</span> <span class=\"op\">==</span> <span class=\"str\">\"A\"</span> <span class=\"kw\">or</span> <span class=\"var\">tramo</span> <span class=\"op\">==</span> <span class=\"str\">\"B\"</span>:\n            <span class=\"var\">descMed</span> <span class=\"op\">=</span> <span class=\"num\">0.12</span>\n        <span class=\"kw\">else</span>:\n            <span class=\"var\">descMed</span> <span class=\"op\">=</span> <span class=\"num\">0.08</span>\n\n    <span class=\"kw\">if</span> <span class=\"var\">tramo</span> <span class=\"op\">==</span> <span class=\"str\">\"A\"</span> <span class=\"kw\">or</span> <span class=\"var\">tramo</span> <span class=\"op\">==</span> <span class=\"str\">\"B\"</span>:\n        <span class=\"var\">descDesp</span> <span class=\"op\">=</span> <span class=\"num\">0.10</span>\n        <span class=\"kw\">if</span> <span class=\"var\">edad</span> <span class=\"op\">&gt;=</span> <span class=\"num\">55</span>:\n            <span class=\"var\">descDesp</span> <span class=\"op\">=</span> <span class=\"var\">descDesp</span> <span class=\"op\">+</span> <span class=\"num\">0.05</span>\n\n    <span class=\"var\">med</span> <span class=\"op\">=</span> <span class=\"var\">med</span> <span class=\"op\">-</span> <span class=\"var\">med</span> <span class=\"op\">*</span> <span class=\"var\">descMed</span>\n    <span class=\"var\">desp</span> <span class=\"op\">=</span> <span class=\"var\">desp</span> <span class=\"op\">-</span> <span class=\"var\">desp</span> <span class=\"op\">*</span> <span class=\"var\">descDesp</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de medicamentos es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">med</span>)))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del despacho es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">desp</span>)))\n\n<span class=\"fn\">CalcularPack</span>()",
+      "tip": "<strong>Estructura clave:</strong> dos bloques independientes de Si-Entonces. El primero calcula el descuento sobre medicamentos (combinando edad y tramo). El segundo calcula el descuento sobre despacho (solo depende del tramo y, opcionalmente, de la edad para el +5%)."
+    },
+    {
+      "n": 247,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Pasaje mensual y emisión de tarjeta",
+      "panelTitulo": "EA 2.0 — Variante B: Pasaje y tarjeta según distancia y categoría",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Programa que calcule el <strong>pasaje mensual</strong> y la <strong>emisión de tarjeta</strong> aplicando descuentos según <em>distancia (km)</em> y <em>categoría</em>.<br><br><strong>Bases:</strong> Pasaje $95.000 · Tarjeta $5.000.<br><br><strong>Descuentos pasaje:</strong><br>• Distancia ≥ 400 · Cat 1 o 2 → 20%<br>• Distancia ≥ 400 · Cat 3 o 4 → 14%<br>• 200 ≤ Distancia &lt; 400 · Cat 1 o 2 → 12%<br>• 200 ≤ Distancia &lt; 400 · Cat 3 o 4 → 8%<br>• Categoría 5 o Distancia &lt; 200 → 0%<br><br><strong>Descuentos tarjeta:</strong> Cat 1, 2 o 3 → 10%; +5% si Distancia ≥ 300 km.",
+      "eps": [
+        {
+          "e": "Ingrese distancia (km)\nIngrese categoría (1 a 5)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor del pasaje es: y el valor de la tarjeta es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese distancia (km):"
+        },
+        {
+          "t": "i",
+          "v": "450"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese categoría (1 a 5):"
+        },
+        {
+          "t": "i",
+          "v": "2"
+        },
+        {
+          "t": "o",
+          "v": "El valor del pasaje es: 76000"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la tarjeta es: 4250"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese distancia (km):\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese categoría (1 a 5):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del pasaje es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la tarjeta es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "Cuida el orden de las condiciones: revisa primero la distancia, luego la categoría dentro. Para la tarjeta, el +5% solo se suma si ya cumplía la condición de 10%."
+    },
+    {
+      "n": 248,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Retiro de residuos orgánicos y kit inicial",
+      "panelTitulo": "EA 2.0 — Variante C: Cuota y kit según integrantes y quintil",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Programa que calcule el valor de la <strong>cuota</strong> de retiro de residuos orgánicos y el <strong>kit inicial</strong> con descuentos según <em>integrantes del hogar</em> y <em>quintil</em>.<br><br><strong>Bases:</strong> Cuota $12.000 · Kit $15.000.<br><br><strong>Descuentos cuota:</strong><br>• Integrantes ≥ 5 · Quintil 1 o 2 → 25%<br>• Integrantes ≥ 5 · Quintil 3 o 4 → 18%<br>• 2 ≤ Integrantes &lt; 5 · Quintil 1 o 2 → 15%<br>• 2 ≤ Integrantes &lt; 5 · Quintil 3 o 4 → 10%<br>• Quintil 5 o Integrantes &lt; 2 → 0%<br><br><strong>Descuento kit:</strong> Quintil 1, 2 o 3 → 12%; +5% si Integrantes ≥ 4.",
+      "eps": [
+        {
+          "e": "Ingrese integrantes del hogar\nIngrese quintil (1 a 5)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor de la cuota es: y el valor del kit es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese integrantes del hogar:"
+        },
+        {
+          "t": "i",
+          "v": "5"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese quintil (1 a 5):"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la cuota es: 9840"
+        },
+        {
+          "t": "o",
+          "v": "El valor del kit es: 12450"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese integrantes del hogar:\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese quintil (1 a 5):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la cuota es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del kit es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "El caso de Integrantes &lt; 2 anula el descuento de cuota incluso si el quintil sería favorable. Manéjalo con un Si-Entonces externo que envuelve todo el cálculo."
+    },
+    {
+      "n": 249,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Curso laboral y certificado",
+      "panelTitulo": "EA 2.0 — Variante D: Curso y certificado según asistencia y tramo",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Calcule el valor del <strong>curso</strong> y del <strong>certificado</strong> con descuentos según el <em>porcentaje de asistencia</em> y el <em>tramo</em>.<br><br><strong>Bases:</strong> Curso $180.000 · Certificado $12.000.<br><br><strong>Descuentos curso:</strong><br>• Asistencia ≥ 90% · Tramo A o B → 24%<br>• Asistencia ≥ 90% · Tramo C o D → 16%<br>• 75% ≤ Asistencia &lt; 90% · Tramo A o B → 14%<br>• 75% ≤ Asistencia &lt; 90% · Tramo C o D → 10%<br>• Asistencia &lt; 75% → 0%<br><br><strong>Descuento certificado:</strong> Tramo A o B → 10%; +5% si Asistencia ≥ 85%.",
+      "eps": [
+        {
+          "e": "Ingrese asistencia (0 a 100)\nIngrese tramo (A, B, C o D)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor del curso es: y el valor del certificado es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese asistencia (0 a 100):"
+        },
+        {
+          "t": "i",
+          "v": "92"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese tramo (A, B, C o D):"
+        },
+        {
+          "t": "i",
+          "v": "B"
+        },
+        {
+          "t": "o",
+          "v": "El valor del curso es: 136800"
+        },
+        {
+          "t": "o",
+          "v": "El valor del certificado es: 10200"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese asistencia (0 a 100):\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese tramo (A, B, C o D):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del curso es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del certificado es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "El criterio principal es la asistencia. Asegúrate de usar rangos disjuntos: 90% va al primer tramo, no al segundo."
+    },
+    {
+      "n": 250,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Plan dental y radiografía",
+      "panelTitulo": "EA 2.0 — Variante E: Plan dental y radiografía según edad y quintil",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Calcule el valor del <strong>plan dental</strong> y la <strong>radiografía</strong> con descuentos según <em>edad</em> y <em>quintil</em>.<br><br><strong>Bases:</strong> Plan $80.000 · Radiografía $12.000.<br><br><strong>Descuentos plan:</strong><br>• Edad ≤ 25 · Quintil 1 o 2 → 18%<br>• Edad ≤ 25 · Quintil 3 o 4 → 12%<br>• 26 ≤ Edad ≤ 45 · Quintil 1 o 2 → 12%<br>• 26 ≤ Edad ≤ 45 · Quintil 3 o 4 → 8%<br>• Edad &gt; 45 → 0%<br><br><strong>Descuento radiografía:</strong> Quintil 1, 2 o 3 → 10%; +5% si Edad ≥ 40.",
+      "eps": [
+        {
+          "e": "Ingrese edad\nIngrese quintil (1 a 5)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor del plan es: y el valor de la radiografía es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese edad:"
+        },
+        {
+          "t": "i",
+          "v": "42"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese quintil (1 a 5):"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El valor del plan es: 73600"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la radiografía es: 10200"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese edad:\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese quintil (1 a 5):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del plan es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la radiografía es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "Una persona de 42 años en quintil 3 cumple el rango 26–45 (12% al plan) y además es ≥ 40 con quintil ≤ 3 (10% + 5% = 15% a la radiografía)."
+    },
+    {
+      "n": 251,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Guardería: mensualidad y matrícula",
+      "panelTitulo": "EA 2.0 — Variante F: Guardería según horas diarias y tramo",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Calcule la <strong>mensualidad</strong> y la <strong>matrícula</strong> de una guardería con descuentos según <em>horas diarias contratadas</em> y <em>tramo</em>.<br><br><strong>Bases:</strong> Mensualidad $160.000 · Matrícula $35.000.<br><br><strong>Descuentos mensualidad:</strong><br>• Horas ≥ 8 · Tramo A o B → 20%<br>• Horas ≥ 8 · Tramo C o D → 14%<br>• 4 ≤ Horas &lt; 8 · Tramo A o B → 12%<br>• 4 ≤ Horas &lt; 8 · Tramo C o D → 8%<br>• Horas &lt; 4 → 0%<br><br><strong>Descuento matrícula:</strong> Tramo A o B → 10%; +5% si Horas ≥ 6.",
+      "eps": [
+        {
+          "e": "Ingrese horas diarias\nIngrese tramo (A, B, C o D)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor de la mensualidad es: y el valor de la matrícula es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese horas diarias:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese tramo (A, B, C o D):"
+        },
+        {
+          "t": "i",
+          "v": "B"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la mensualidad es: 128000"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la matrícula es: 29750"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese horas diarias:\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese tramo (A, B, C o D):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la mensualidad es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la matrícula es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "Una jornada de 8 horas exactas entra en el primer tramo (Horas ≥ 8), no en el segundo. Cuida los operadores ≥ vs &gt;."
+    },
+    {
+      "n": 252,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Escuela de conducción: curso y examen",
+      "panelTitulo": "EA 2.0 — Variante G: Curso teórico y examen según edad y licencia",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Calcule el <strong>curso teórico</strong> y el <strong>examen práctico</strong> con descuentos según <em>edad</em> y <em>tipo de licencia</em>.<br><br><strong>Bases:</strong> Curso $90.000 · Examen $25.000.<br><br><strong>Descuentos curso:</strong><br>• Edad ≤ 25 · Licencia B → 18%<br>• Edad ≤ 25 · Licencia C → 12%<br>• 26 ≤ Edad ≤ 55 · Licencia B → 12%<br>• 26 ≤ Edad ≤ 55 · Licencia C → 8%<br>• Edad &gt; 55 → 0%<br><br><strong>Descuento examen:</strong> Licencia B → 10%; +5% si Edad ≥ 50.",
+      "eps": [
+        {
+          "e": "Ingrese edad\nIngrese tipo de licencia (B/C)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor del curso es: y el valor del examen es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese edad:"
+        },
+        {
+          "t": "i",
+          "v": "24"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese tipo de licencia (B/C):"
+        },
+        {
+          "t": "i",
+          "v": "B"
+        },
+        {
+          "t": "o",
+          "v": "El valor del curso es: 73800"
+        },
+        {
+          "t": "o",
+          "v": "El valor del examen es: 22500"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese edad:\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese tipo de licencia (B/C):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del curso es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del examen es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "Esta variante solo tiene dos tipos de licencia (B o C), no cuatro tramos. Esto simplifica el primer Si-Entonces interno."
+    },
+    {
+      "n": 253,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Bicicletero mensual y candado",
+      "panelTitulo": "EA 2.0 — Variante H: Bicicletero según días de uso y condición de estudiante",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Calcule el <strong>bicicletero mensual</strong> y el <strong>candado</strong> con descuentos según <em>días de uso al mes</em> y si es <em>estudiante regular</em>.<br><br><strong>Bases:</strong> Bicicletero $15.000 · Candado $9.000.<br><br><strong>Descuentos bicicletero:</strong><br>• Días ≥ 20 · Estudiante Sí → 25%<br>• Días ≥ 20 · Estudiante No → 15%<br>• 10 ≤ Días &lt; 20 · Estudiante Sí → 15%<br>• 10 ≤ Días &lt; 20 · Estudiante No → 8%<br>• Días &lt; 10 → 0%<br><br><strong>Descuento candado:</strong> Estudiante → 10%; +5% si Días ≥ 15.",
+      "eps": [
+        {
+          "e": "Ingrese días de uso\n¿Es estudiante regular? (S/N)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor del bicicletero es: y el valor del candado es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese días de uso:"
+        },
+        {
+          "t": "i",
+          "v": "22"
+        },
+        {
+          "t": "o",
+          "v": "¿Es estudiante regular? (S/N):"
+        },
+        {
+          "t": "i",
+          "v": "S"
+        },
+        {
+          "t": "o",
+          "v": "El valor del bicicletero es: 11250"
+        },
+        {
+          "t": "o",
+          "v": "El valor del candado es: 7650"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese días de uso:\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"¿Es estudiante regular? (S/N):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del bicicletero es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del candado es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "Lee la condición de estudiante como Caracter (\"S\" o \"N\") y compara con comillas. Cuida que el descuento de candado al no estudiante es 0% (no se aplica la regla del candado)."
+    },
+    {
+      "n": 254,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Plan mensual de gimnasio y evaluación inicial",
+      "panelTitulo": "EA 2.0 — Variante 9: Gimnasio según días de entrenamiento y tipo de usuario",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Calcule el <strong>plan mensual</strong> de gimnasio y la <strong>evaluación inicial</strong> con descuentos según <em>días de entrenamiento al mes</em> y <em>tipo de usuario</em> (E=Estudiante, S=Senior, G=General).<br><br><strong>Bases:</strong> Plan $55.000 · Evaluación $10.000.<br><br><strong>Descuentos plan:</strong><br>• Días ≥ 20 · Estudiante o Senior → 22%<br>• Días ≥ 20 · General → 15%<br>• 10 ≤ Días &lt; 20 · Estudiante o Senior → 12%<br>• 10 ≤ Días &lt; 20 · General → 8%<br>• Días &lt; 10 → 0%<br><br><strong>Descuento evaluación:</strong> Estudiante o Senior → 10%; +5% si Días ≥ 16.",
+      "eps": [
+        {
+          "e": "Ingrese días de entrenamiento\nIngrese tipo de usuario (E, S o G)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor del plan mensual es: y el valor de la evaluación inicial es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese días de entrenamiento:"
+        },
+        {
+          "t": "i",
+          "v": "20"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese tipo de usuario (E, S o G):"
+        },
+        {
+          "t": "i",
+          "v": "E"
+        },
+        {
+          "t": "o",
+          "v": "El valor del plan mensual es: 42900"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la evaluación inicial es: 8500"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese días de entrenamiento:\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese tipo de usuario (E, S o G):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del plan mensual es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la evaluación inicial es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "Estudiante y Senior se tratan idénticamente: agrúpalos con un <em>or</em> en lugar de duplicar código. <code>tipo == \"E\" or tipo == \"S\"</code>"
+    },
+    {
+      "n": 255,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Taller de robótica y kit de materiales",
+      "panelTitulo": "EA 2.0 — Variante 10: Taller de robótica según edad y pertenencia al club",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Calcule el <strong>taller de robótica</strong> y el <strong>kit de materiales</strong> con descuentos según <em>edad</em> y si <em>pertenece al club</em>.<br><br><strong>Bases:</strong> Taller $120.000 · Kit $22.000.<br><br><strong>Descuentos taller:</strong><br>• Edad ≤ 17 · Club Sí → 20%<br>• Edad ≤ 17 · Club No → 14%<br>• 18 ≤ Edad ≤ 25 · Club Sí → 12%<br>• 18 ≤ Edad ≤ 25 · Club No → 8%<br>• Edad &gt; 25 → 0%<br><br><strong>Descuento kit:</strong> Club Sí → 10%; +5% si Edad ≤ 15.",
+      "eps": [
+        {
+          "e": "Ingrese edad\n¿Pertenece al club de robótica? (S/N)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor del taller de robótica es: y el valor del kit de materiales es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese edad:"
+        },
+        {
+          "t": "i",
+          "v": "15"
+        },
+        {
+          "t": "o",
+          "v": "¿Pertenece al club de robótica? (S/N):"
+        },
+        {
+          "t": "i",
+          "v": "S"
+        },
+        {
+          "t": "o",
+          "v": "El valor del taller de robótica es: 96000"
+        },
+        {
+          "t": "o",
+          "v": "El valor del kit de materiales es: 18700"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese edad:\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"¿Pertenece al club de robótica? (S/N):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del taller de robótica es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del kit de materiales es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "El +5% del kit se aplica para edades menores (≤ 15), al revés que otras variantes donde el extra se da a mayores. Lee con atención antes de codificar."
+    },
+    {
+      "n": 256,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Plan cowork mensual y tarjeta de acceso",
+      "panelTitulo": "EA 2.0 — Variante 11: Cowork según horas contratadas y tipo de cliente",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Calcule el <strong>plan cowork</strong> y la <strong>tarjeta de acceso</strong> con descuentos según <em>horas contratadas</em> y <em>tipo de cliente</em> (E=Emprendedor, X=Externo).<br><br><strong>Bases:</strong> Plan $110.000 · Tarjeta $7.000.<br><br><strong>Descuentos plan:</strong><br>• Horas ≥ 80 · Emprendedor → 18%<br>• Horas ≥ 80 · Externo → 12%<br>• 40 ≤ Horas &lt; 80 · Emprendedor → 10%<br>• 40 ≤ Horas &lt; 80 · Externo → 6%<br>• Horas &lt; 40 → 0%<br><br><strong>Descuento tarjeta:</strong> Emprendedor → 10%; +5% si Horas ≥ 60.",
+      "eps": [
+        {
+          "e": "Ingrese horas contratadas\nIngrese tipo de cliente (E/X)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor del plan cowork mensual es: y el valor de la tarjeta de acceso es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese horas contratadas:"
+        },
+        {
+          "t": "i",
+          "v": "85"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese tipo de cliente (E/X):"
+        },
+        {
+          "t": "i",
+          "v": "E"
+        },
+        {
+          "t": "o",
+          "v": "El valor del plan cowork mensual es: 90200"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la tarjeta de acceso es: 5950"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese horas contratadas:\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese tipo de cliente (E/X):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del plan cowork mensual es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la tarjeta de acceso es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "Patrón idéntico a las variantes anteriores pero con números distintos. Reutiliza tu plantilla."
+    },
+    {
+      "n": 257,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Preuniversitario y material de estudio",
+      "panelTitulo": "EA 2.0 — Variante 12: Preuniversitario según puntaje diagnóstico y beca",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos"
+      ],
+      "enunciado": "Calcule el <strong>preuniversitario</strong> y el <strong>material de estudio</strong> con descuentos según <em>puntaje diagnóstico</em> y si tiene <em>beca</em>.<br><br><strong>Bases:</strong> Preuniversitario $150.000 · Material $25.000.<br><br><strong>Descuentos preuniversitario:</strong><br>• Puntaje ≥ 650 · Beca Sí → 25%<br>• Puntaje ≥ 650 · Beca No → 18%<br>• 500 ≤ Puntaje &lt; 650 · Beca Sí → 15%<br>• 500 ≤ Puntaje &lt; 650 · Beca No → 10%<br>• Puntaje &lt; 500 → 0%<br><br><strong>Descuento material:</strong> Beca → 10%; +5% si Puntaje ≥ 600.",
+      "eps": [
+        {
+          "e": "Ingrese puntaje diagnóstico\n¿Cuenta con beca? (S/N)",
+          "p": "Determinar descuentos según los dos criterios\nAplicar reglas extra (5% adicional, 0% si fuera de rango)",
+          "s": "Mostrar el valor del preuniversitario es: y el valor del material de estudio es:"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese puntaje diagnóstico:"
+        },
+        {
+          "t": "i",
+          "v": "700"
+        },
+        {
+          "t": "o",
+          "v": "¿Cuenta con beca? (S/N):"
+        },
+        {
+          "t": "i",
+          "v": "S"
+        },
+        {
+          "t": "o",
+          "v": "El valor del preuniversitario es: 112500"
+        },
+        {
+          "t": "o",
+          "v": "El valor del material de estudio es: 21250"
+        }
+      ],
+      "code": "<span class=\"cm\"># Solución estructural — adapta los valores y condiciones</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"cm\"># 1) Leer las dos entradas</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese puntaje diagnóstico:\"</span>)\n    <span class=\"var\">v1</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"¿Cuenta con beca? (S/N):\"</span>)\n    <span class=\"var\">v2</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 2) Aplicar la tabla de descuentos (Si-Entonces anidado)</span>\n    <span class=\"cm\">#    valor1 = base1 - base1 * descuento1</span>\n    <span class=\"cm\"># 3) Aplicar reglas extra sobre el segundo valor (10% + 5% adicional)</span>\n    <span class=\"cm\">#    valor2 = base2 - base2 * descuento2</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del preuniversitario es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor1</span>))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del material de estudio es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">valor2</span>))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "Considera siempre primero el límite superior (≥ 650), luego el rango intermedio (500–650), y por último el caso 0%. Así evitas que un puntaje alto caiga por error en el rango medio."
+    },
+    {
+      "n": 258,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Curso de programación y plataforma virtual",
+      "panelTitulo": "EA 2.0 — Variante 13: Programación con modalidad (recargo/descuento)",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos",
+        "Recargo",
+        "Total"
+      ],
+      "enunciado": "Calcule la <strong>mensualidad</strong> del curso de programación y el <strong>acceso a la plataforma virtual</strong>, aplicando descuentos según <em>edad</em> y <em>categoría</em>, y además un descuento o recargo según la <em>modalidad</em> (Online o Presencial).<br><br><strong>Bases:</strong> Mensualidad $72.000 · Plataforma $9.500.<br><br><strong>Descuentos mensualidad:</strong><br>• Edad &lt; 18 · Estudiante o Egresado → 16%<br>• Edad &lt; 18 · General → 10%<br>• Edad ≥ 18 · Estudiante o Egresado → 12%<br>• Edad ≥ 18 · General → 6%<br><br><strong>Plataforma:</strong> Estudiante o Egresado → 12% de descuento. Si modalidad es <em>Online</em> → +5% adicional de descuento. Si modalidad es <em>Presencial</em> → recargo de 4% al final.<br><br><strong>Salida:</strong> mostrar mensualidad, plataforma y <strong>total a pagar</strong>.",
+      "eps": [
+        {
+          "e": "edad (Entero)\ncategoría (Caracter)\nmodalidad (Caracter)",
+          "p": "1) Descuento mensualidad según edad×categoría\n2) Descuento plataforma según categoría (+5% online o +4% recargo presencial)\n3) total = mensualidad + plataforma",
+          "s": "Mensualidad, plataforma y total a pagar"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese su edad:"
+        },
+        {
+          "t": "i",
+          "v": "17"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese categoría (Estudiante, Egresado o General):"
+        },
+        {
+          "t": "i",
+          "v": "Estudiante"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese modalidad (Online/Presencial):"
+        },
+        {
+          "t": "i",
+          "v": "Online"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la mensualidad es: 60480"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la plataforma es: 7942"
+        },
+        {
+          "t": "o",
+          "v": "El total a pagar es: 68422"
+        }
+      ],
+      "code": "<span class=\"cm\"># Estructura sugerida en tres bloques independientes</span>\n<span class=\"kw\">def</span> <span class=\"fn\">Calcular</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese su edad:\"</span>)\n    <span class=\"var\">edad</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese categoría (Estudiante, Egresado o General):\"</span>)\n    <span class=\"var\">cat</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese modalidad (Online/Presencial):\"</span>)\n    <span class=\"var\">mod</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"cm\"># 1) Descuento mensualidad</span>\n    <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0</span>\n    <span class=\"kw\">if</span> <span class=\"var\">edad</span> <span class=\"op\">&lt;</span> <span class=\"num\">18</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">cat</span> <span class=\"op\">==</span> <span class=\"str\">\"Estudiante\"</span> <span class=\"kw\">or</span> <span class=\"var\">cat</span> <span class=\"op\">==</span> <span class=\"str\">\"Egresado\"</span>:\n            <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0.16</span>\n        <span class=\"kw\">else</span>:\n            <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0.10</span>\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">cat</span> <span class=\"op\">==</span> <span class=\"str\">\"Estudiante\"</span> <span class=\"kw\">or</span> <span class=\"var\">cat</span> <span class=\"op\">==</span> <span class=\"str\">\"Egresado\"</span>:\n            <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0.12</span>\n        <span class=\"kw\">else</span>:\n            <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0.06</span>\n\n    <span class=\"cm\"># 2) Descuento plataforma (+ modalidad)</span>\n    <span class=\"var\">descPlat</span> <span class=\"op\">=</span> <span class=\"num\">0</span>\n    <span class=\"kw\">if</span> <span class=\"var\">cat</span> <span class=\"op\">==</span> <span class=\"str\">\"Estudiante\"</span> <span class=\"kw\">or</span> <span class=\"var\">cat</span> <span class=\"op\">==</span> <span class=\"str\">\"Egresado\"</span>:\n        <span class=\"var\">descPlat</span> <span class=\"op\">=</span> <span class=\"num\">0.12</span>\n    <span class=\"kw\">if</span> <span class=\"var\">mod</span> <span class=\"op\">==</span> <span class=\"str\">\"Online\"</span>:\n        <span class=\"var\">descPlat</span> <span class=\"op\">=</span> <span class=\"var\">descPlat</span> <span class=\"op\">+</span> <span class=\"num\">0.05</span>\n\n    <span class=\"var\">mens</span> <span class=\"op\">=</span> <span class=\"num\">72000</span> <span class=\"op\">*</span> (<span class=\"num\">1</span> <span class=\"op\">-</span> <span class=\"var\">descMens</span>)\n    <span class=\"var\">plat</span> <span class=\"op\">=</span> <span class=\"num\">9500</span> <span class=\"op\">*</span> (<span class=\"num\">1</span> <span class=\"op\">-</span> <span class=\"var\">descPlat</span>)\n    <span class=\"kw\">if</span> <span class=\"var\">mod</span> <span class=\"op\">==</span> <span class=\"str\">\"Presencial\"</span>:\n        <span class=\"var\">plat</span> <span class=\"op\">=</span> <span class=\"var\">plat</span> <span class=\"op\">*</span> <span class=\"num\">1.04</span>\n\n    <span class=\"var\">total</span> <span class=\"op\">=</span> <span class=\"var\">mens</span> <span class=\"op\">+</span> <span class=\"var\">plat</span>\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la mensualidad es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">mens</span>)))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la plataforma es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">plat</span>)))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El total a pagar es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">total</span>)))\n\n<span class=\"fn\">Calcular</span>()",
+      "tip": "El recargo Presencial se aplica <strong>después</strong> de calcular el valor con descuentos: <code>plat = plat * 1.04</code>. No es un descuento negativo dentro del porcentaje; es un factor multiplicativo aparte."
+    },
+    {
+      "n": 259,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Plan nutricional y despacho de pauta",
+      "panelTitulo": "EA 2.0 — Variante 14: Plan nutricional con 3 rangos de edad y zona",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos",
+        "Recargo",
+        "Total"
+      ],
+      "enunciado": "Calcule el <strong>plan nutricional</strong> y el <strong>despacho</strong> de la pauta personalizada, con descuentos según <em>edad</em> y <em>membresía</em>, y un recargo opcional según <em>zona</em>.<br><br><strong>Bases:</strong> Plan $65.000 · Despacho $6.000.<br><br><strong>Descuentos plan:</strong><br>• Edad ≤ 25 · Plus o Pro → 18%<br>• Edad ≤ 25 · Básica → 10%<br>• 26 ≤ Edad &lt; 60 · Plus o Pro → 14%<br>• 26 ≤ Edad &lt; 60 · Básica → 7%<br>• Edad ≥ 60 · Plus o Pro → 20%<br>• Edad ≥ 60 · Básica → 12%<br><br><strong>Despacho:</strong> Plus o Pro → 10% de descuento. Si Edad ≥ 60 → +8% adicional. Si zona es <em>Apartada</em> → recargo de 10% al final.",
+      "eps": [
+        {
+          "e": "edad (Entero)\nmembresía (Caracter)\nzona (Caracter)",
+          "p": "1) descPlan según rango edad × membresía\n2) descDesp = 10% si Plus/Pro (+8% si edad≥60)\n3) Si zona='Apartada': despacho *= 1.10",
+          "s": "Plan, despacho y total a pagar"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese su edad:"
+        },
+        {
+          "t": "i",
+          "v": "22"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese membresía (Básica, Plus o Pro):"
+        },
+        {
+          "t": "i",
+          "v": "Pro"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese zona (Urbana/Apartada):"
+        },
+        {
+          "t": "i",
+          "v": "Urbana"
+        },
+        {
+          "t": "o",
+          "v": "El valor del plan es: 53300"
+        },
+        {
+          "t": "o",
+          "v": "El valor del despacho es: 5400"
+        },
+        {
+          "t": "o",
+          "v": "El total a pagar es: 58700"
+        }
+      ],
+      "code": "<span class=\"cm\"># Variante con TRES rangos de edad → tres ramas if/elif/else</span>\n<span class=\"kw\">def</span> <span class=\"fn\">PlanNutricional</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese su edad:\"</span>)\n    <span class=\"var\">edad</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese membresía (Básica, Plus o Pro):\"</span>)\n    <span class=\"var\">mem</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese zona (Urbana/Apartada):\"</span>)\n    <span class=\"var\">zona</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"var\">descPlan</span> <span class=\"op\">=</span> <span class=\"num\">0</span>\n    <span class=\"kw\">if</span> <span class=\"var\">edad</span> <span class=\"op\">&lt;=</span> <span class=\"num\">25</span>:\n        <span class=\"var\">descPlan</span> <span class=\"op\">=</span> <span class=\"num\">0.18</span> <span class=\"kw\">if</span> <span class=\"var\">mem</span> <span class=\"op\">!=</span> <span class=\"str\">\"Básica\"</span> <span class=\"kw\">else</span> <span class=\"num\">0.10</span>\n    <span class=\"kw\">elif</span> <span class=\"var\">edad</span> <span class=\"op\">&lt;</span> <span class=\"num\">60</span>:\n        <span class=\"var\">descPlan</span> <span class=\"op\">=</span> <span class=\"num\">0.14</span> <span class=\"kw\">if</span> <span class=\"var\">mem</span> <span class=\"op\">!=</span> <span class=\"str\">\"Básica\"</span> <span class=\"kw\">else</span> <span class=\"num\">0.07</span>\n    <span class=\"kw\">else</span>:\n        <span class=\"var\">descPlan</span> <span class=\"op\">=</span> <span class=\"num\">0.20</span> <span class=\"kw\">if</span> <span class=\"var\">mem</span> <span class=\"op\">!=</span> <span class=\"str\">\"Básica\"</span> <span class=\"kw\">else</span> <span class=\"num\">0.12</span>\n\n    <span class=\"var\">descDesp</span> <span class=\"op\">=</span> <span class=\"num\">0</span>\n    <span class=\"kw\">if</span> <span class=\"var\">mem</span> <span class=\"op\">!=</span> <span class=\"str\">\"Básica\"</span>:\n        <span class=\"var\">descDesp</span> <span class=\"op\">=</span> <span class=\"num\">0.10</span>\n        <span class=\"kw\">if</span> <span class=\"var\">edad</span> <span class=\"op\">&gt;=</span> <span class=\"num\">60</span>:\n            <span class=\"var\">descDesp</span> <span class=\"op\">=</span> <span class=\"var\">descDesp</span> <span class=\"op\">+</span> <span class=\"num\">0.08</span>\n\n    <span class=\"var\">plan</span> <span class=\"op\">=</span> <span class=\"num\">65000</span> <span class=\"op\">*</span> (<span class=\"num\">1</span> <span class=\"op\">-</span> <span class=\"var\">descPlan</span>)\n    <span class=\"var\">desp</span> <span class=\"op\">=</span> <span class=\"num\">6000</span> <span class=\"op\">*</span> (<span class=\"num\">1</span> <span class=\"op\">-</span> <span class=\"var\">descDesp</span>)\n    <span class=\"kw\">if</span> <span class=\"var\">zona</span> <span class=\"op\">==</span> <span class=\"str\">\"Apartada\"</span>:\n        <span class=\"var\">desp</span> <span class=\"op\">=</span> <span class=\"var\">desp</span> <span class=\"op\">*</span> <span class=\"num\">1.10</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del plan es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">plan</span>)))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del despacho es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">desp</span>)))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El total a pagar es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">plan</span> <span class=\"op\">+</span> <span class=\"var\">desp</span>)))\n\n<span class=\"fn\">PlanNutricional</span>()",
+      "tip": "Aquí hay <strong>tres</strong> rangos de edad (≤25, 26–59, ≥60). Usa <code>if / elif / else</code> en lugar de Si-Sino anidados — el código queda mucho más legible."
+    },
+    {
+      "n": 260,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Escuela de música y arriendo de instrumento",
+      "panelTitulo": "EA 2.0 — Variante 15: Escuela de música con entrega y total",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos",
+        "Recargo",
+        "Total"
+      ],
+      "enunciado": "Calcule la <strong>mensualidad</strong> de la escuela de música y el <strong>arriendo del instrumento</strong>, con descuentos según <em>horas semanales</em> y <em>nivel</em>, más un recargo si la entrega es a domicilio.<br><br><strong>Bases:</strong> Mensualidad $52.000 · Arriendo $12.000.<br><br><strong>Descuentos mensualidad:</strong><br>• Horas ≥ 6 · Inicial o Intermedio → 15%<br>• Horas ≥ 6 · Avanzado → 20%<br>• 3 ≤ Horas &lt; 6 · Inicial o Intermedio → 8%<br>• 3 ≤ Horas &lt; 6 · Avanzado → 12%<br>• Horas &lt; 3 → 0%<br><br><strong>Arriendo:</strong> Avanzado → 10% de descuento; +5% si Horas ≥ 5. Si entrega es a <em>Domicilio</em> → recargo de 8% al final.",
+      "eps": [
+        {
+          "e": "horas (Entero)\nnivel (Caracter)\nentrega (Caracter)",
+          "p": "1) descMens según horas×nivel\n2) descArr según nivel (+5% si horas≥5)\n3) Si entrega='Domicilio': arriendo *= 1.08",
+          "s": "Mensualidad, arriendo y total"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese horas semanales:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese nivel (Inicial, Intermedio o Avanzado):"
+        },
+        {
+          "t": "i",
+          "v": "Avanzado"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese entrega (Local/Domicilio):"
+        },
+        {
+          "t": "i",
+          "v": "Local"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la mensualidad es: 41600"
+        },
+        {
+          "t": "o",
+          "v": "El valor del arriendo es: 10260"
+        },
+        {
+          "t": "o",
+          "v": "El total a pagar es: 51860"
+        }
+      ],
+      "code": "<span class=\"cm\"># Patrón similar a la variante 14, con tres entradas</span>\n<span class=\"kw\">def</span> <span class=\"fn\">EscuelaMusica</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese horas semanales:\"</span>)\n    <span class=\"var\">h</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese nivel (Inicial, Intermedio o Avanzado):\"</span>)\n    <span class=\"var\">niv</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese entrega (Local/Domicilio):\"</span>)\n    <span class=\"var\">ent</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0</span>\n    <span class=\"kw\">if</span> <span class=\"var\">h</span> <span class=\"op\">&gt;=</span> <span class=\"num\">6</span>:\n        <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0.20</span> <span class=\"kw\">if</span> <span class=\"var\">niv</span> <span class=\"op\">==</span> <span class=\"str\">\"Avanzado\"</span> <span class=\"kw\">else</span> <span class=\"num\">0.15</span>\n    <span class=\"kw\">elif</span> <span class=\"var\">h</span> <span class=\"op\">&gt;=</span> <span class=\"num\">3</span>:\n        <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0.12</span> <span class=\"kw\">if</span> <span class=\"var\">niv</span> <span class=\"op\">==</span> <span class=\"str\">\"Avanzado\"</span> <span class=\"kw\">else</span> <span class=\"num\">0.08</span>\n\n    <span class=\"var\">descArr</span> <span class=\"op\">=</span> <span class=\"num\">0</span>\n    <span class=\"kw\">if</span> <span class=\"var\">niv</span> <span class=\"op\">==</span> <span class=\"str\">\"Avanzado\"</span>:\n        <span class=\"var\">descArr</span> <span class=\"op\">=</span> <span class=\"num\">0.10</span>\n        <span class=\"kw\">if</span> <span class=\"var\">h</span> <span class=\"op\">&gt;=</span> <span class=\"num\">5</span>:\n            <span class=\"var\">descArr</span> <span class=\"op\">=</span> <span class=\"var\">descArr</span> <span class=\"op\">+</span> <span class=\"num\">0.05</span>\n\n    <span class=\"var\">mens</span> <span class=\"op\">=</span> <span class=\"num\">52000</span> <span class=\"op\">*</span> (<span class=\"num\">1</span> <span class=\"op\">-</span> <span class=\"var\">descMens</span>)\n    <span class=\"var\">arr</span> <span class=\"op\">=</span> <span class=\"num\">12000</span> <span class=\"op\">*</span> (<span class=\"num\">1</span> <span class=\"op\">-</span> <span class=\"var\">descArr</span>)\n    <span class=\"kw\">if</span> <span class=\"var\">ent</span> <span class=\"op\">==</span> <span class=\"str\">\"Domicilio\"</span>:\n        <span class=\"var\">arr</span> <span class=\"op\">=</span> <span class=\"var\">arr</span> <span class=\"op\">*</span> <span class=\"num\">1.08</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la mensualidad es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">mens</span>)))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor del arriendo es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">arr</span>)))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El total a pagar es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">mens</span> <span class=\"op\">+</span> <span class=\"var\">arr</span>)))\n\n<span class=\"fn\">EscuelaMusica</span>()",
+      "tip": "Aquí el descuento <em>Avanzado</em> es MAYOR que el de Inicial/Intermedio (al revés que en otras variantes donde el grupo \"general\" recibe menos). Lee la tabla con atención."
+    },
+    {
+      "n": 261,
+      "ea": "2.0",
+      "level": "intermedio",
+      "titulo": "Curso de idiomas intensivo y materiales",
+      "panelTitulo": "EA 2.0 — Variante 16: Idiomas con 4 niveles de membresía y zona",
+      "tags": [
+        "Si-Entonces anidado",
+        "Descuentos",
+        "Recargo",
+        "Total"
+      ],
+      "enunciado": "Calcule la <strong>mensualidad</strong> del curso de idiomas y los <strong>materiales a domicilio</strong>, con descuentos según <em>edad</em> y <em>membresía</em> (4 niveles: Básica, Premium, Gold, Platinum), y recargo según <em>zona</em>.<br><br><strong>Bases:</strong> Mensualidad $48.000 · Materiales $7.000.<br><br><strong>Descuentos mensualidad:</strong> 3 rangos de edad × 2 grupos de membresía (Básica/Premium vs Gold/Platinum).<br>• Edad &lt; 18 · B/P → 14%; G/P → 20%<br>• 18 ≤ Edad &lt; 60 · B/P → 9%; G/P → 16%<br>• Edad ≥ 60 · B/P → 12%; G/P → 22%<br><br><strong>Materiales:</strong> Gold o Platinum → 10% de descuento; +5% adicional si Edad &lt; 18 o Edad ≥ 60. Si zona es <em>Apartada</em> → recargo de 6% al final.",
+      "eps": [
+        {
+          "e": "edad (Entero)\nmembresía (Caracter)\nzona (Caracter)",
+          "p": "1) descMens según rango edad × grupo membresía\n2) descMat según membresía (+5% si edad joven o senior)\n3) Si zona apartada: mat *= 1.06",
+          "s": "Mensualidad, materiales y total"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese su edad:"
+        },
+        {
+          "t": "i",
+          "v": "16"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese membresía (Básica, Premium, Gold o Platinum):"
+        },
+        {
+          "t": "i",
+          "v": "Gold"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese zona (Urbana/Apartada):"
+        },
+        {
+          "t": "i",
+          "v": "Urbana"
+        },
+        {
+          "t": "o",
+          "v": "El valor de la mensualidad es: 38400"
+        },
+        {
+          "t": "o",
+          "v": "El valor de los materiales es: 5985"
+        },
+        {
+          "t": "o",
+          "v": "El total a pagar es: 44385"
+        }
+      ],
+      "code": "<span class=\"cm\"># Agrupar las 4 membresías en 2 grupos simplifica el código</span>\n<span class=\"kw\">def</span> <span class=\"fn\">CursoIdiomas</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese su edad:\"</span>)\n    <span class=\"var\">edad</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese membresía (Básica, Premium, Gold o Platinum):\"</span>)\n    <span class=\"var\">mem</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese zona (Urbana/Apartada):\"</span>)\n    <span class=\"var\">zona</span> <span class=\"op\">=</span> <span class=\"fn\">input</span>()\n\n    <span class=\"var\">premium</span> <span class=\"op\">=</span> (<span class=\"var\">mem</span> <span class=\"op\">==</span> <span class=\"str\">\"Gold\"</span> <span class=\"kw\">or</span> <span class=\"var\">mem</span> <span class=\"op\">==</span> <span class=\"str\">\"Platinum\"</span>)\n\n    <span class=\"kw\">if</span> <span class=\"var\">edad</span> <span class=\"op\">&lt;</span> <span class=\"num\">18</span>:\n        <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0.20</span> <span class=\"kw\">if</span> <span class=\"var\">premium</span> <span class=\"kw\">else</span> <span class=\"num\">0.14</span>\n    <span class=\"kw\">elif</span> <span class=\"var\">edad</span> <span class=\"op\">&lt;</span> <span class=\"num\">60</span>:\n        <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0.16</span> <span class=\"kw\">if</span> <span class=\"var\">premium</span> <span class=\"kw\">else</span> <span class=\"num\">0.09</span>\n    <span class=\"kw\">else</span>:\n        <span class=\"var\">descMens</span> <span class=\"op\">=</span> <span class=\"num\">0.22</span> <span class=\"kw\">if</span> <span class=\"var\">premium</span> <span class=\"kw\">else</span> <span class=\"num\">0.12</span>\n\n    <span class=\"var\">descMat</span> <span class=\"op\">=</span> <span class=\"num\">0</span>\n    <span class=\"kw\">if</span> <span class=\"var\">premium</span>:\n        <span class=\"var\">descMat</span> <span class=\"op\">=</span> <span class=\"num\">0.10</span>\n        <span class=\"kw\">if</span> <span class=\"var\">edad</span> <span class=\"op\">&lt;</span> <span class=\"num\">18</span> <span class=\"kw\">or</span> <span class=\"var\">edad</span> <span class=\"op\">&gt;=</span> <span class=\"num\">60</span>:\n            <span class=\"var\">descMat</span> <span class=\"op\">=</span> <span class=\"var\">descMat</span> <span class=\"op\">+</span> <span class=\"num\">0.05</span>\n\n    <span class=\"var\">mens</span> <span class=\"op\">=</span> <span class=\"num\">48000</span> <span class=\"op\">*</span> (<span class=\"num\">1</span> <span class=\"op\">-</span> <span class=\"var\">descMens</span>)\n    <span class=\"var\">mat</span> <span class=\"op\">=</span> <span class=\"num\">7000</span> <span class=\"op\">*</span> (<span class=\"num\">1</span> <span class=\"op\">-</span> <span class=\"var\">descMat</span>)\n    <span class=\"kw\">if</span> <span class=\"var\">zona</span> <span class=\"op\">==</span> <span class=\"str\">\"Apartada\"</span>:\n        <span class=\"var\">mat</span> <span class=\"op\">=</span> <span class=\"var\">mat</span> <span class=\"op\">*</span> <span class=\"num\">1.06</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de la mensualidad es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">mens</span>)))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El valor de los materiales es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">mat</span>)))\n    <span class=\"fn\">print</span>(<span class=\"str\">\"El total a pagar es: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"fn\">int</span>(<span class=\"var\">mens</span> <span class=\"op\">+</span> <span class=\"var\">mat</span>)))\n\n<span class=\"fn\">CursoIdiomas</span>()",
+      "tip": "Tener una variable booleana <code>premium</code> evita repetir la condición compuesta <code>mem == \"Gold\" or mem == \"Platinum\"</code> en cada rama del if anidado."
+    },
+    {
+      "n": 262,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con ajuste a número par",
+      "panelTitulo": "EA 2.1 — Variante A: Juego de adivinanza con ajuste a número par",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a par:</strong> si el número generado es impar, ajustarlo. Si <code>n + 1</code> está dentro del rango, usar <code>n + 1</code>; si no, usar <code>n - 1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">%</span> <span class=\"num\">2</span> <span class=\"op\">!=</span> <span class=\"num\">0</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span> <span class=\"op\">&lt;=</span> <span class=\"var\">num2</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span>\n        <span class=\"kw\">else</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">-</span> <span class=\"num\">1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 263,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con múltiplo de 3",
+      "panelTitulo": "EA 2.1 — Variante B: Juego de adivinanza con múltiplo de 3",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a múltiplo de 3:</strong> dejar el múltiplo de 3 inmediatamente menor o igual. Fórmula: <code>n = (n // 3) * 3</code>. Si queda fuera del rango (por debajo de num1), usar <code>num1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> (<span class=\"var\">numero</span> <span class=\"op\">//</span> <span class=\"num\">3</span>) <span class=\"op\">*</span> <span class=\"num\">3</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&lt;</span> <span class=\"var\">num1</span>:\n        <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">num1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 264,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con ajuste a número par",
+      "panelTitulo": "EA 2.1 — Variante C: Juego de adivinanza con ajuste a número par",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a par:</strong> si el número generado es impar, ajustarlo. Si <code>n + 1</code> está dentro del rango, usar <code>n + 1</code>; si no, usar <code>n - 1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">%</span> <span class=\"num\">2</span> <span class=\"op\">!=</span> <span class=\"num\">0</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span> <span class=\"op\">&lt;=</span> <span class=\"var\">num2</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span>\n        <span class=\"kw\">else</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">-</span> <span class=\"num\">1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 265,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con múltiplo de 3",
+      "panelTitulo": "EA 2.1 — Variante D: Juego de adivinanza con múltiplo de 3",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a múltiplo de 3:</strong> dejar el múltiplo de 3 inmediatamente menor o igual. Fórmula: <code>n = (n // 3) * 3</code>. Si queda fuera del rango (por debajo de num1), usar <code>num1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> (<span class=\"var\">numero</span> <span class=\"op\">//</span> <span class=\"num\">3</span>) <span class=\"op\">*</span> <span class=\"num\">3</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&lt;</span> <span class=\"var\">num1</span>:\n        <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">num1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 266,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con ajuste a número par",
+      "panelTitulo": "EA 2.1 — Variante E: Juego de adivinanza con ajuste a número par",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a par:</strong> si el número generado es impar, ajustarlo. Si <code>n + 1</code> está dentro del rango, usar <code>n + 1</code>; si no, usar <code>n - 1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">%</span> <span class=\"num\">2</span> <span class=\"op\">!=</span> <span class=\"num\">0</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span> <span class=\"op\">&lt;=</span> <span class=\"var\">num2</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span>\n        <span class=\"kw\">else</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">-</span> <span class=\"num\">1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 267,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con múltiplo de 3",
+      "panelTitulo": "EA 2.1 — Variante F: Juego de adivinanza con múltiplo de 3",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a múltiplo de 3:</strong> dejar el múltiplo de 3 inmediatamente menor o igual. Fórmula: <code>n = (n // 3) * 3</code>. Si queda fuera del rango (por debajo de num1), usar <code>num1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> (<span class=\"var\">numero</span> <span class=\"op\">//</span> <span class=\"num\">3</span>) <span class=\"op\">*</span> <span class=\"num\">3</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&lt;</span> <span class=\"var\">num1</span>:\n        <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">num1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 268,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con ajuste a número par",
+      "panelTitulo": "EA 2.1 — Variante G: Juego de adivinanza con ajuste a número par",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a par:</strong> si el número generado es impar, ajustarlo. Si <code>n + 1</code> está dentro del rango, usar <code>n + 1</code>; si no, usar <code>n - 1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">%</span> <span class=\"num\">2</span> <span class=\"op\">!=</span> <span class=\"num\">0</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span> <span class=\"op\">&lt;=</span> <span class=\"var\">num2</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span>\n        <span class=\"kw\">else</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">-</span> <span class=\"num\">1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 269,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con múltiplo de 3",
+      "panelTitulo": "EA 2.1 — Variante H: Juego de adivinanza con múltiplo de 3",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a múltiplo de 3:</strong> dejar el múltiplo de 3 inmediatamente menor o igual. Fórmula: <code>n = (n // 3) * 3</code>. Si queda fuera del rango (por debajo de num1), usar <code>num1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> (<span class=\"var\">numero</span> <span class=\"op\">//</span> <span class=\"num\">3</span>) <span class=\"op\">*</span> <span class=\"num\">3</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&lt;</span> <span class=\"var\">num1</span>:\n        <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">num1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 270,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con múltiplo de 5",
+      "panelTitulo": "EA 2.1 — Variante 9: Juego de adivinanza con múltiplo de 5",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a múltiplo de 5:</strong> dejar el múltiplo de 5 inmediatamente menor o igual. Fórmula: <code>n = (n // 5) * 5</code>. Si queda fuera del rango (por debajo de num1), usar <code>num1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> (<span class=\"var\">numero</span> <span class=\"op\">//</span> <span class=\"num\">5</span>) <span class=\"op\">*</span> <span class=\"num\">5</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&lt;</span> <span class=\"var\">num1</span>:\n        <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">num1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 271,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con ajuste a número impar",
+      "panelTitulo": "EA 2.1 — Variante 10: Juego de adivinanza con ajuste a número impar",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a impar:</strong> si el número generado es par, ajustarlo. Si <code>n + 1</code> está dentro del rango, usar <code>n + 1</code>; si no, usar <code>n - 1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">%</span> <span class=\"num\">2</span> <span class=\"op\">==</span> <span class=\"num\">0</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span> <span class=\"op\">&lt;=</span> <span class=\"var\">num2</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">+</span> <span class=\"num\">1</span>\n        <span class=\"kw\">else</span>:\n            <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">numero</span> <span class=\"op\">-</span> <span class=\"num\">1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 272,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con múltiplo de 4",
+      "panelTitulo": "EA 2.1 — Variante 11: Juego de adivinanza con múltiplo de 4",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a múltiplo de 4:</strong> dejar el múltiplo de 4 inmediatamente menor o igual. Fórmula: <code>n = (n // 4) * 4</code>. Si queda fuera del rango (por debajo de num1), usar <code>num1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> (<span class=\"var\">numero</span> <span class=\"op\">//</span> <span class=\"num\">4</span>) <span class=\"op\">*</span> <span class=\"num\">4</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&lt;</span> <span class=\"var\">num1</span>:\n        <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">num1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    },
+    {
+      "n": 273,
+      "ea": "2.1",
+      "level": "avanzado",
+      "titulo": "Juego de adivinanza con ajuste a decena",
+      "panelTitulo": "EA 2.1 — Variante 12: Juego de adivinanza con ajuste a decena",
+      "tags": [
+        "random.randint",
+        "Si-Entonces",
+        "Pistas",
+        "Adivinanza"
+      ],
+      "enunciado": "Programa de adivinanza en 3 intentos.<br><br><strong>Pasos:</strong><br>1) Pedir <em>límite inferior</em> y <em>límite superior</em> (el primero debe ser menor).<br>2) Generar un número aleatorio con <code>randint(num1, num2)</code>.<br>3) <strong>Ajuste a múltiplo de 10:</strong> dejar el múltiplo de 10 inmediatamente menor o igual. Fórmula: <code>n = (n // 10) * 10</code>. Si queda fuera del rango (por debajo de num1), usar <code>num1</code>.<br>4) Pedir hasta 3 intentos:<br>&nbsp;&nbsp;• 1er intento fallido → \"El número es mayor/menor.\"<br>&nbsp;&nbsp;• 2do intento fallido → mostrar pista de cuál intento estuvo más cerca.<br>&nbsp;&nbsp;• 3er intento fallido → \"Perdiste.\" y revelar el número.<br>&nbsp;&nbsp;• Si acierta en cualquier intento → \"Felicitaciones, …\" y terminar.",
+      "eps": [
+        {
+          "e": "num1, num2 (Entero, num1 < num2)\nintento1, intento2, intento3 (Entero)",
+          "p": "n = randint(num1, num2)\nAjustar n según regla específica\nComparar intentos contra n y dar pistas",
+          "s": "Mensaje de felicitación o \"Perdiste.\" con el número revelado"
+        }
+      ],
+      "consola": [
+        {
+          "t": "o",
+          "v": "Ingrese límite inferior:"
+        },
+        {
+          "t": "i",
+          "v": "0"
+        },
+        {
+          "t": "o",
+          "v": "Ingrese límite superior:"
+        },
+        {
+          "t": "i",
+          "v": "10"
+        },
+        {
+          "t": "o",
+          "v": "Intente adivinar:"
+        },
+        {
+          "t": "i",
+          "v": "3"
+        },
+        {
+          "t": "o",
+          "v": "El número es mayor."
+        },
+        {
+          "t": "o",
+          "v": "Intente de nuevo:"
+        },
+        {
+          "t": "i",
+          "v": "8"
+        },
+        {
+          "t": "o",
+          "v": "El número es menor."
+        },
+        {
+          "t": "o",
+          "v": "Te daré una pista:"
+        },
+        {
+          "t": "o",
+          "v": "El número que buscas está más cerca de 8 que de 3"
+        },
+        {
+          "t": "o",
+          "v": "Intente la última vez:"
+        },
+        {
+          "t": "i",
+          "v": "6"
+        },
+        {
+          "t": "o",
+          "v": "Felicitaciones, pudiste adivinar."
+        }
+      ],
+      "code": "<span class=\"kw\">from</span> <span class=\"var\">random</span> <span class=\"kw\">import</span> <span class=\"fn\">randint</span>\n\n<span class=\"kw\">def</span> <span class=\"fn\">JuegoAdivinanza</span>():\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite inferior:\"</span>)\n    <span class=\"var\">num1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Ingrese límite superior:\"</span>)\n    <span class=\"var\">num2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"fn\">randint</span>(<span class=\"var\">num1</span>, <span class=\"var\">num2</span>)\n\n    <span class=\"cm\"># --- AJUSTE DEL NÚMERO ---</span>\n    <span class=\"var\">numero</span> <span class=\"op\">=</span> (<span class=\"var\">numero</span> <span class=\"op\">//</span> <span class=\"num\">10</span>) <span class=\"op\">*</span> <span class=\"num\">10</span>\n    <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&lt;</span> <span class=\"var\">num1</span>:\n        <span class=\"var\">numero</span> <span class=\"op\">=</span> <span class=\"var\">num1</span>\n\n    <span class=\"fn\">print</span>(<span class=\"str\">\"Intente adivinar:\"</span>)\n    <span class=\"var\">i1</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n    <span class=\"kw\">if</span> <span class=\"var\">i1</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en el primer intento.\"</span>)\n    <span class=\"kw\">else</span>:\n        <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i1</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n        <span class=\"fn\">print</span>(<span class=\"str\">\"Intente de nuevo:\"</span>)\n        <span class=\"var\">i2</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n        <span class=\"kw\">if</span> <span class=\"var\">i2</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, adivinó en su segundo intento.\"</span>)\n        <span class=\"kw\">else</span>:\n            <span class=\"kw\">if</span> <span class=\"var\">numero</span> <span class=\"op\">&gt;</span> <span class=\"var\">i2</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es mayor.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número es menor.\"</span>)\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Te daré una pista:\"</span>)\n            <span class=\"kw\">if</span> <span class=\"fn\">abs</span>(<span class=\"var\">i1</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>) <span class=\"op\">&lt;</span> <span class=\"fn\">abs</span>(<span class=\"var\">i2</span> <span class=\"op\">-</span> <span class=\"var\">numero</span>):\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>))\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número que buscas está más cerca de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i2</span>) <span class=\"op\">+</span> <span class=\"str\">\" que de \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">i1</span>))\n\n            <span class=\"fn\">print</span>(<span class=\"str\">\"Intente la última vez:\"</span>)\n            <span class=\"var\">i3</span> <span class=\"op\">=</span> <span class=\"fn\">int</span>(<span class=\"fn\">input</span>())\n\n            <span class=\"kw\">if</span> <span class=\"var\">i3</span> <span class=\"op\">==</span> <span class=\"var\">numero</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Felicitaciones, pudiste adivinar.\"</span>)\n            <span class=\"kw\">else</span>:\n                <span class=\"fn\">print</span>(<span class=\"str\">\"Perdiste.\"</span>)\n                <span class=\"fn\">print</span>(<span class=\"str\">\"El número era: \"</span> <span class=\"op\">+</span> <span class=\"fn\">str</span>(<span class=\"var\">numero</span>))\n\n<span class=\"fn\">JuegoAdivinanza</span>()",
+      "tip": "Atajos: <code>abs(a-b)</code> da la distancia (sin signo) entre dos números, útil para comparar cuál intento estuvo más cerca. <code>x // k * k</code> redondea hacia abajo al múltiplo de k más cercano."
+    }
+]
 };
 
   const { experiences: EXPERIENCES, exercises: EX } = json;
