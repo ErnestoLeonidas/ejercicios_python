@@ -120,6 +120,28 @@ body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--
 .k{color:#ff7b72}.b{color:#79c0ff}.s{color:#a5d6ff}.n{color:#ffa657}.c{color:#6e7f93;font-style:italic}
 
 .hidden{display:none!important}
+
+/* ── solution toggle ── */
+.sol-toggle-wrap{margin-top:4px}
+.btn-sol-toggle{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--line2);background:var(--bg2);
+  color:var(--muted);font-size:13.5px;font-weight:700;
+  padding:10px 18px;border-radius:9px;cursor:pointer;
+  font-family:'Nunito';transition:.15s;width:100%;justify-content:center;
+  margin-bottom:0;
+}
+.btn-sol-toggle:hover{border-color:#3b82f6;color:#93c5fd;background:#0d1826}
+.btn-sol-toggle.open{border-color:#6b7280;color:var(--ink);background:#151f2e}
+.sol-icon{font-size:16px;transition:.2s}
+.btn-sol-toggle.open .sol-icon{filter:opacity(.5)}
+.sol-warn{
+  display:flex;align-items:center;gap:10px;
+  background:#1c1400;border:1px solid #78350f;
+  border-radius:8px;padding:11px 16px;margin-top:10px;
+  font-size:13.5px;font-weight:600;color:#fbbf24;line-height:1.4;
+}
+.sol-warn-icon{font-size:18px;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -244,13 +266,21 @@ body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_1.py</code>
-      <button class="btn-copy" data-code="1_1">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_1">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_1"><code># ===== Ejercicio 1.1 — Cuartel de Bomberos =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_1.py</code>
+        <button class="btn-copy" data-code="1_1">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_1"><code># ===== Ejercicio 1.1 — Cuartel de Bomberos =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -298,6 +328,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡El cuartel cuenta con {categoria_alta} Capitanes y {categoria_baja} Voluntarios! ¡Brigada lista!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-2" class="exsec" data-tipo="1" data-nivel="similar" data-search="restaurante gourmet administra al personal de cocina recién contratado. valida que la cantidad y los años de experiencia sean enteros positivos. 1.2">
@@ -352,13 +383,21 @@ print(f&quot;\n¡El cuartel cuenta con {categoria_alta} Capitanes y {categoria_b
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_2.py</code>
-      <button class="btn-copy" data-code="1_2">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_2">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_2"><code># ===== Ejercicio 1.2 — Restaurante Gourmet =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_2.py</code>
+        <button class="btn-copy" data-code="1_2">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_2"><code># ===== Ejercicio 1.2 — Restaurante Gourmet =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -406,6 +445,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡El restaurante cuenta con {categoria_alta} Chefs Ejecutivos y {categoria_baja} Ayudantes de Cocina! ¡Servicio listo!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-3" class="exsec" data-tipo="1" data-nivel="similar" data-search="club deportivo administra a los atletas recién inscritos. valida que la cantidad y las medallas sean enteros positivos. 1.3">
@@ -460,13 +500,21 @@ print(f&quot;\n¡El restaurante cuenta con {categoria_alta} Chefs Ejecutivos y {
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_3.py</code>
-      <button class="btn-copy" data-code="1_3">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_3">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_3"><code># ===== Ejercicio 1.3 — Club Deportivo =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_3.py</code>
+        <button class="btn-copy" data-code="1_3">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_3"><code># ===== Ejercicio 1.3 — Club Deportivo =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -514,6 +562,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡El club cuenta con {categoria_alta} Atletas Élite y {categoria_baja} Atletas Amateur! ¡A competir!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-4" class="exsec" data-tipo="1" data-nivel="similar" data-search="concesionario de vehículos administra los vehículos recién ingresados. valida que la cantidad y el precio sean enteros positivos. 1.4">
@@ -568,13 +617,21 @@ print(f&quot;\n¡El club cuenta con {categoria_alta} Atletas Élite y {categoria
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_4.py</code>
-      <button class="btn-copy" data-code="1_4">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_4">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_4"><code># ===== Ejercicio 1.4 — Concesionario de Vehículos =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_4.py</code>
+        <button class="btn-copy" data-code="1_4">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_4"><code># ===== Ejercicio 1.4 — Concesionario de Vehículos =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -622,6 +679,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡El concesionario cuenta con {categoria_alta} vehículos de Gama Alta y {categoria_baja} de Gama Económica! ¡Listos para la venta!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-5" class="exsec" data-tipo="1" data-nivel="similar" data-search="empresa de drones administra los drones recién fabricados. valida que la cantidad y la autonomía sean enteros positivos. 1.5">
@@ -676,13 +734,21 @@ print(f&quot;\n¡El concesionario cuenta con {categoria_alta} vehículos de Gama
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_5.py</code>
-      <button class="btn-copy" data-code="1_5">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_5">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_5"><code># ===== Ejercicio 1.5 — Empresa de Drones =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_5.py</code>
+        <button class="btn-copy" data-code="1_5">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_5"><code># ===== Ejercicio 1.5 — Empresa de Drones =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -730,6 +796,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡La empresa cuenta con {categoria_alta} drones Profesionales y {categoria_baja} Recreativos! ¡Listos para despegar!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-6" class="exsec" data-tipo="1" data-nivel="similar" data-search="orquesta sinfónica administra a los músicos recién integrados. valida que la cantidad y los años de trayectoria sean enteros positivos. 1.6">
@@ -784,13 +851,21 @@ print(f&quot;\n¡La empresa cuenta con {categoria_alta} drones Profesionales y {
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_6.py</code>
-      <button class="btn-copy" data-code="1_6">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_6">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_6"><code># ===== Ejercicio 1.6 — Orquesta Sinfónica =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_6.py</code>
+        <button class="btn-copy" data-code="1_6">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_6"><code># ===== Ejercicio 1.6 — Orquesta Sinfónica =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -838,6 +913,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡La orquesta cuenta con {categoria_alta} Solistas y {categoria_baja} Integrantes de Sección! ¡A ensayar!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-7" class="exsec" data-tipo="1" data-nivel="similar" data-search="cooperativa agrícola administra los predios recién afiliados. valida que la cantidad y la superficie sean enteros positivos. 1.7">
@@ -892,13 +968,21 @@ print(f&quot;\n¡La orquesta cuenta con {categoria_alta} Solistas y {categoria_b
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_7.py</code>
-      <button class="btn-copy" data-code="1_7">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_7">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_7"><code># ===== Ejercicio 1.7 — Cooperativa Agrícola =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_7.py</code>
+        <button class="btn-copy" data-code="1_7">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_7"><code># ===== Ejercicio 1.7 — Cooperativa Agrícola =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -946,6 +1030,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡La cooperativa cuenta con {categoria_alta} predios de Producción Industrial y {categoria_baja} de Producción Familiar! ¡A cosechar!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-8" class="exsec" data-tipo="1" data-nivel="similar" data-search="software factory administra a los programadores recién contratados. valida que la cantidad y los proyectos completados sean enteros positivos. 1.8">
@@ -1000,13 +1085,21 @@ print(f&quot;\n¡La cooperativa cuenta con {categoria_alta} predios de Producci�
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_8.py</code>
-      <button class="btn-copy" data-code="1_8">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_8">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_8"><code># ===== Ejercicio 1.8 — Software Factory =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_8.py</code>
+        <button class="btn-copy" data-code="1_8">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_8"><code># ===== Ejercicio 1.8 — Software Factory =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -1054,6 +1147,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡La empresa cuenta con {categoria_alta} Desarrolladores Senior y {categoria_baja} Trainees! ¡A programar!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-9" class="exsec" data-tipo="1" data-nivel="similar" data-search="red de bibliotecas administra las bibliotecas recién incorporadas a la red. valida que la cantidad y los ejemplares sean enteros positivos. 1.9">
@@ -1108,13 +1202,21 @@ print(f&quot;\n¡La empresa cuenta con {categoria_alta} Desarrolladores Senior y
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_9.py</code>
-      <button class="btn-copy" data-code="1_9">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_9">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_9"><code># ===== Ejercicio 1.9 — Red de Bibliotecas =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_9.py</code>
+        <button class="btn-copy" data-code="1_9">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_9"><code># ===== Ejercicio 1.9 — Red de Bibliotecas =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -1162,6 +1264,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡La red cuenta con {categoria_alta} Bibliotecas Centrales y {categoria_baja} Bibliotecas Comunitarias! ¡A leer!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-10" class="exsec" data-tipo="1" data-nivel="similar" data-search="empresa de energía solar administra los paneles solares recién instalados. valida que la cantidad y la potencia sean enteros positivos. 1.10">
@@ -1216,13 +1319,21 @@ print(f&quot;\n¡La red cuenta con {categoria_alta} Bibliotecas Centrales y {cat
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_10.py</code>
-      <button class="btn-copy" data-code="1_10">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_10">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_10"><code># ===== Ejercicio 1.10 — Empresa de Energía Solar =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_10.py</code>
+        <button class="btn-copy" data-code="1_10">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_10"><code># ===== Ejercicio 1.10 — Empresa de Energía Solar =====
 
 # 1) Validar la cantidad a registrar (entero positivo)
 while True:
@@ -1270,6 +1381,7 @@ for i in range(cantidad):
 # 5) Resumen final
 print(f&quot;\n¡La empresa cuenta con {categoria_alta} paneles de Alta Eficiencia y {categoria_baja} Estándar! ¡Energía lista!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-11" class="exsec" data-tipo="1" data-nivel="avanzado" data-search="centro de reciclaje (3 categorías + promedio) registra lotes de material y los clasifica en tres categorías por peso, calculando total y promedio de kilos. 1.11">
@@ -1318,13 +1430,21 @@ print(f&quot;\n¡La empresa cuenta con {categoria_alta} paneles de Alta Eficienc
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_11.py</code>
-      <button class="btn-copy" data-code="1_11">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_11">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_11"><code># ===== Ejercicio 1.11 — Centro de Reciclaje =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_11.py</code>
+        <button class="btn-copy" data-code="1_11">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_11"><code># ===== Ejercicio 1.11 — Centro de Reciclaje =====
 
 while True:
     try:
@@ -1371,6 +1491,7 @@ promedio = total_kilos / cantidad
 print(f&quot;\n¡El centro recibió {pesados} lotes Pesados, {medianos} Medianos y {livianos} Livianos,&quot;)
 print(f&quot;con un promedio de {promedio:.2f} kilos por lote!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-12" class="exsec" data-tipo="1" data-nivel="avanzado" data-search="plataforma de streaming (validación compuesta) verifica creadores de contenido. el nombre de canal debe cumplir varias reglas a la vez. 1.12">
@@ -1415,13 +1536,21 @@ print(f&quot;con un promedio de {promedio:.2f} kilos por lote!&quot;)
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_12.py</code>
-      <button class="btn-copy" data-code="1_12">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_12">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_12"><code># ===== Ejercicio 1.12 — Plataforma de Streaming =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_12.py</code>
+        <button class="btn-copy" data-code="1_12">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_12"><code># ===== Ejercicio 1.12 — Plataforma de Streaming =====
 
 while True:
     try:
@@ -1465,6 +1594,7 @@ for i in range(cantidad):
 
 print(f&quot;\n¡La plataforma verificó {partners} Creadores Partner y {emergentes} Creadores Emergentes! ¡A transmitir!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-13" class="exsec" data-tipo="1" data-nivel="avanzado" data-search="estación meteorológica (máximo y mínimo) registra sensores por altitud y reporta la altitud máxima y mínima observadas. 1.13">
@@ -1512,13 +1642,21 @@ print(f&quot;\n¡La plataforma verificó {partners} Creadores Partner y {emergen
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_13.py</code>
-      <button class="btn-copy" data-code="1_13">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_13">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_13"><code># ===== Ejercicio 1.13 — Estación Meteorológica =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_13.py</code>
+        <button class="btn-copy" data-code="1_13">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_13"><code># ===== Ejercicio 1.13 — Estación Meteorológica =====
 
 while True:
     try:
@@ -1566,6 +1704,7 @@ for i in range(cantidad):
 print(f&quot;\n¡La estación tiene {altura} Sensores de Altura y {valle} de Valle!&quot;)
 print(f&quot;Altitud máxima: {alt_max} m, mínima: {alt_min} m.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-14" class="exsec" data-tipo="1" data-nivel="avanzado" data-search="banco de sangre (porcentaje) registra donantes y calcula el porcentaje de donantes frecuentes. 1.14">
@@ -1610,13 +1749,21 @@ print(f&quot;Altitud máxima: {alt_max} m, mínima: {alt_min} m.&quot;)
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_14.py</code>
-      <button class="btn-copy" data-code="1_14">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_14">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_14"><code># ===== Ejercicio 1.14 — Banco de Sangre =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_14.py</code>
+        <button class="btn-copy" data-code="1_14">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_14"><code># ===== Ejercicio 1.14 — Banco de Sangre =====
 
 while True:
     try:
@@ -1658,6 +1805,7 @@ porcentaje = frecuentes / cantidad * 100
 print(f&quot;\n¡El banco cuenta con {frecuentes} Donantes Frecuentes y {nuevos} Nuevos!&quot;)
 print(f&quot;Un {porcentaje:.1f}% son frecuentes.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-15" class="exsec" data-tipo="1" data-nivel="avanzado" data-search="refugio de animales (3 categorías + mayoría) clasifica animales por edad en tres categorías e informa cuál es la más numerosa. 1.15">
@@ -1703,13 +1851,21 @@ print(f&quot;Un {porcentaje:.1f}% son frecuentes.&quot;)
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_15.py</code>
-      <button class="btn-copy" data-code="1_15">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_15">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_15"><code># ===== Ejercicio 1.15 — Refugio de Animales =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_15.py</code>
+        <button class="btn-copy" data-code="1_15">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_15"><code># ===== Ejercicio 1.15 — Refugio de Animales =====
 
 while True:
     try:
@@ -1765,6 +1921,7 @@ if len(ganadoras) == 1:
 else:
     print(&quot;Hay empate entre: &quot; + &quot;, &quot;.join(ganadoras) + &quot;.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-16" class="exsec" data-tipo="1" data-nivel="complejo" data-search="aerolínea (dos datos combinados con and/or) clasifica pilotos combinando horas de vuelo y simuladores aprobados mediante expresiones lógicas. 1.16">
@@ -1813,13 +1970,21 @@ else:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_16.py</code>
-      <button class="btn-copy" data-code="1_16">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_16">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_16"><code># ===== Ejercicio 1.16 — Aerolínea =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_16.py</code>
+        <button class="btn-copy" data-code="1_16">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_16"><code># ===== Ejercicio 1.16 — Aerolínea =====
 
 while True:
     try:
@@ -1872,6 +2037,7 @@ for i in range(cantidad):
 print(f&quot;\n¡La aerolínea cuenta con {comandantes} Comandantes, {copilotos} Copilotos&quot;)
 print(f&quot;y {formacion} pilotos En Formación! ¡Listos para volar!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-17" class="exsec" data-tipo="1" data-nivel="complejo" data-search="feria de emprendimiento (acumuladores + mejor stand) registra stands, acumula ventas totales, identifica el mejor stand y calcula el promedio. 1.17">
@@ -1920,13 +2086,21 @@ print(f&quot;y {formacion} pilotos En Formación! ¡Listos para volar!&quot;)
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_17.py</code>
-      <button class="btn-copy" data-code="1_17">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_17">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_17"><code># ===== Ejercicio 1.17 — Feria de Emprendimiento =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_17.py</code>
+        <button class="btn-copy" data-code="1_17">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_17"><code># ===== Ejercicio 1.17 — Feria de Emprendimiento =====
 
 while True:
     try:
@@ -1977,6 +2151,7 @@ print(f&quot;\n¡La feria tuvo {destacados} Stands Destacados y {regulares} Regu
 print(f&quot;Total vendido: {total_ventas}, promedio: {promedio:.2f}.&quot;)
 print(f&quot;Mejor stand: {mejor_codigo} con {mejor_venta}.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-18" class="exsec" data-tipo="1" data-nivel="complejo" data-search="programa de becas (criterio ponderado) calcula un puntaje final ponderado y clasifica a los postulantes en tres niveles. 1.18">
@@ -2026,13 +2201,21 @@ print(f&quot;Mejor stand: {mejor_codigo} con {mejor_venta}.&quot;)
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_18.py</code>
-      <button class="btn-copy" data-code="1_18">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_18">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_18"><code># ===== Ejercicio 1.18 — Programa de Becas =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_18.py</code>
+        <button class="btn-copy" data-code="1_18">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_18"><code># ===== Ejercicio 1.18 — Programa de Becas =====
 
 while True:
     try:
@@ -2087,6 +2270,7 @@ for i in range(cantidad):
 print(f&quot;\n¡El programa otorgó {completos} Becas Completas, {parciales} Parciales&quot;)
 print(f&quot;y {no_sel} postulantes No Seleccionados!&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-19" class="exsec" data-tipo="1" data-nivel="complejo" data-search="maratón solidaria (estadísticas completas) clasifica corredores por tiempo y calcula total, promedio, mejor/peor tiempo y porcentaje de élite. 1.19">
@@ -2136,13 +2320,21 @@ print(f&quot;y {no_sel} postulantes No Seleccionados!&quot;)
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_19.py</code>
-      <button class="btn-copy" data-code="1_19">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_19">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_19"><code># ===== Ejercicio 1.19 — Maratón Solidaria =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_19.py</code>
+        <button class="btn-copy" data-code="1_19">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_19"><code># ===== Ejercicio 1.19 — Maratón Solidaria =====
 
 while True:
     try:
@@ -2197,6 +2389,7 @@ porcentaje_elite = elite / cantidad * 100
 print(f&quot;\n¡La maratón tuvo {elite} Élite, {intermedios} Intermedios y {recreativos} Recreativos!&quot;)
 print(f&quot;Promedio: {promedio:.1f} min, mejor: {mejor} min, peor: {peor} min, Élite: {porcentaje_elite:.1f}%.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-1-20" class="exsec" data-tipo="1" data-nivel="complejo" data-search="control de calidad (condiciones lógicas) clasifica productos combinando nivel de defectos y nota de inspección con expresiones lógicas. 1.20">
@@ -2245,13 +2438,21 @@ print(f&quot;Promedio: {promedio:.1f} min, mejor: {mejor} min, peor: {peor} min,
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio1_1_20.py</code>
-      <button class="btn-copy" data-code="1_20">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="1_20">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-1_20"><code># ===== Ejercicio 1.20 — Control de Calidad =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio1_1_20.py</code>
+        <button class="btn-copy" data-code="1_20">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-1_20"><code># ===== Ejercicio 1.20 — Control de Calidad =====
 
 while True:
     try:
@@ -2307,6 +2508,7 @@ promedio = total_defectos / cantidad
 print(f&quot;\n¡Control finalizado! {aprobados} Aprobados, {observacion} En Observación y {rechazados} Rechazados.&quot;)
 print(f&quot;Promedio de defectos: {promedio:.2f} por producto.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <div class="tipo-div" data-tipo="2"><div class="tipo-div-inner"><span class="tipo-pill t2">2</span><div><h2 class="tipo-h">Ejercicio 2 — Gestión de recursos mediante menú</h2><p class="tipo-p">Sistema de menú repetitivo con validación de opciones y cantidades mediante try/except, historial de sesión y mensaje de salida.</p></div></div><hr class="tipo-hr"></div>
@@ -2347,13 +2549,21 @@ print(f&quot;Promedio de defectos: {promedio:.2f} por producto.&quot;)
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_1.py</code>
-      <button class="btn-copy" data-code="2_1">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_1">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_1"><code># ===== Ejercicio 2.1 — Sala de Cine =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_1.py</code>
+        <button class="btn-copy" data-code="2_1">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_1"><code># ===== Ejercicio 2.1 — Sala de Cine =====
 
 CAPACIDAD_MAXIMA = 200
 disponibles = CAPACIDAD_MAXIMA
@@ -2418,6 +2628,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-2" class="exsec" data-tipo="2" data-nivel="similar" data-search="cancha de fútbol gestiona horarios mediante un menú de opciones. comienza con 48 horarios disponibles. usa manejo de excepciones para la opción del menú y las cantidades; el historial sube al reservar y baja al cancelar. 2.2">
@@ -2457,13 +2668,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_2.py</code>
-      <button class="btn-copy" data-code="2_2">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_2">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_2"><code># ===== Ejercicio 2.2 — Cancha de Fútbol =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_2.py</code>
+        <button class="btn-copy" data-code="2_2">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_2"><code># ===== Ejercicio 2.2 — Cancha de Fútbol =====
 
 CAPACIDAD_MAXIMA = 48
 disponibles = CAPACIDAD_MAXIMA
@@ -2528,6 +2747,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-3" class="exsec" data-tipo="2" data-nivel="similar" data-search="bicicletas públicas gestiona bicicletas mediante un menú de opciones. comienza con 80 bicicletas disponibles. usa manejo de excepciones para la opción del menú y las cantidades; el historial sube al arrendar y baja al devolver. 2.3">
@@ -2567,13 +2787,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_3.py</code>
-      <button class="btn-copy" data-code="2_3">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_3">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_3"><code># ===== Ejercicio 2.3 — Bicicletas Públicas =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_3.py</code>
+        <button class="btn-copy" data-code="2_3">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_3"><code># ===== Ejercicio 2.3 — Bicicletas Públicas =====
 
 CAPACIDAD_MAXIMA = 80
 disponibles = CAPACIDAD_MAXIMA
@@ -2638,6 +2866,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-4" class="exsec" data-tipo="2" data-nivel="similar" data-search="restaurante gestiona mesas mediante un menú de opciones. comienza con 35 mesas disponibles. usa manejo de excepciones para la opción del menú y las cantidades; el historial sube al ocupar y baja al liberar. 2.4">
@@ -2677,13 +2906,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_4.py</code>
-      <button class="btn-copy" data-code="2_4">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_4">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_4"><code># ===== Ejercicio 2.4 — Restaurante =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_4.py</code>
+        <button class="btn-copy" data-code="2_4">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_4"><code># ===== Ejercicio 2.4 — Restaurante =====
 
 CAPACIDAD_MAXIMA = 35
 disponibles = CAPACIDAD_MAXIMA
@@ -2748,6 +2985,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-5" class="exsec" data-tipo="2" data-nivel="similar" data-search="casilleros de gimnasio gestiona casilleros mediante un menú de opciones. comienza con 150 casilleros disponibles. usa manejo de excepciones para la opción del menú y las cantidades; el historial sube al asignar y baja al liberar. 2.5">
@@ -2787,13 +3025,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_5.py</code>
-      <button class="btn-copy" data-code="2_5">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_5">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_5"><code># ===== Ejercicio 2.5 — Casilleros de Gimnasio =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_5.py</code>
+        <button class="btn-copy" data-code="2_5">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_5"><code># ===== Ejercicio 2.5 — Casilleros de Gimnasio =====
 
 CAPACIDAD_MAXIMA = 150
 disponibles = CAPACIDAD_MAXIMA
@@ -2858,6 +3104,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-6" class="exsec" data-tipo="2" data-nivel="similar" data-search="botes de un lago gestiona botes mediante un menú de opciones. comienza con 20 botes disponibles. usa manejo de excepciones para la opción del menú y las cantidades; el historial sube al arrendar y baja al recibir. 2.6">
@@ -2897,13 +3144,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_6.py</code>
-      <button class="btn-copy" data-code="2_6">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_6">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_6"><code># ===== Ejercicio 2.6 — Botes de un Lago =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_6.py</code>
+        <button class="btn-copy" data-code="2_6">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_6"><code># ===== Ejercicio 2.6 — Botes de un Lago =====
 
 CAPACIDAD_MAXIMA = 20
 disponibles = CAPACIDAD_MAXIMA
@@ -2968,6 +3223,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-7" class="exsec" data-tipo="2" data-nivel="similar" data-search="cargadores de autos eléctricos gestiona cargadores mediante un menú de opciones. comienza con 16 cargadores disponibles. usa manejo de excepciones para la opción del menú y las cantidades; el historial sube al ocupar y baja al liberar. 2.7">
@@ -3007,13 +3263,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_7.py</code>
-      <button class="btn-copy" data-code="2_7">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_7">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_7"><code># ===== Ejercicio 2.7 — Cargadores de Autos Eléctricos =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_7.py</code>
+        <button class="btn-copy" data-code="2_7">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_7"><code># ===== Ejercicio 2.7 — Cargadores de Autos Eléctricos =====
 
 CAPACIDAD_MAXIMA = 16
 disponibles = CAPACIDAD_MAXIMA
@@ -3078,6 +3342,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-8" class="exsec" data-tipo="2" data-nivel="similar" data-search="tablets de un colegio gestiona tablets mediante un menú de opciones. comienza con 90 tablets disponibles. usa manejo de excepciones para la opción del menú y las cantidades; el historial sube al prestar y baja al recibir. 2.8">
@@ -3117,13 +3382,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_8.py</code>
-      <button class="btn-copy" data-code="2_8">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_8">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_8"><code># ===== Ejercicio 2.8 — Tablets de un Colegio =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_8.py</code>
+        <button class="btn-copy" data-code="2_8">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_8"><code># ===== Ejercicio 2.8 — Tablets de un Colegio =====
 
 CAPACIDAD_MAXIMA = 90
 disponibles = CAPACIDAD_MAXIMA
@@ -3188,6 +3461,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-9" class="exsec" data-tipo="2" data-nivel="similar" data-search="carpas de camping gestiona carpas mediante un menú de opciones. comienza con 45 carpas disponibles. usa manejo de excepciones para la opción del menú y las cantidades; el historial sube al arrendar y baja al devolver. 2.9">
@@ -3227,13 +3501,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_9.py</code>
-      <button class="btn-copy" data-code="2_9">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_9">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_9"><code># ===== Ejercicio 2.9 — Carpas de Camping =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_9.py</code>
+        <button class="btn-copy" data-code="2_9">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_9"><code># ===== Ejercicio 2.9 — Carpas de Camping =====
 
 CAPACIDAD_MAXIMA = 45
 disponibles = CAPACIDAD_MAXIMA
@@ -3298,6 +3580,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-10" class="exsec" data-tipo="2" data-nivel="similar" data-search="sillas de ruedas de un hospital gestiona sillas mediante un menú de opciones. comienza con 30 sillas disponibles. usa manejo de excepciones para la opción del menú y las cantidades; el historial sube al entregar y baja al recibir. 2.10">
@@ -3337,13 +3620,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_10.py</code>
-      <button class="btn-copy" data-code="2_10">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_10">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_10"><code># ===== Ejercicio 2.10 — Sillas de Ruedas de un Hospital =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_10.py</code>
+        <button class="btn-copy" data-code="2_10">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_10"><code># ===== Ejercicio 2.10 — Sillas de Ruedas de un Hospital =====
 
 CAPACIDAD_MAXIMA = 30
 disponibles = CAPACIDAD_MAXIMA
@@ -3408,6 +3699,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-11" class="exsec" data-tipo="2" data-nivel="avanzado" data-search="estacionamiento (porcentaje de ocupación) gestiona cupos de un estacionamiento con una opción adicional que muestra el porcentaje de ocupación. 2.11">
@@ -3448,13 +3740,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_11.py</code>
-      <button class="btn-copy" data-code="2_11">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_11">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_11"><code># ===== Ejercicio 2.11 — Estacionamiento =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_11.py</code>
+        <button class="btn-copy" data-code="2_11">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_11"><code># ===== Ejercicio 2.11 — Estacionamiento =====
 
 CAPACIDAD_MAXIMA = 120
 disponibles = CAPACIDAD_MAXIMA
@@ -3518,6 +3818,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 6.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-12" class="exsec" data-tipo="2" data-nivel="avanzado" data-search="hotel (dos tipos de habitación) gestiona habitaciones distinguiendo estándar y suites, con disponibilidad por tipo. 2.12">
@@ -3557,13 +3858,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_12.py</code>
-      <button class="btn-copy" data-code="2_12">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_12">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_12"><code># ===== Ejercicio 2.12 — Hotel =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_12.py</code>
+        <button class="btn-copy" data-code="2_12">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_12"><code># ===== Ejercicio 2.12 — Hotel =====
 
 MAX_ESTANDAR = 40
 MAX_SUITE = 20
@@ -3627,6 +3936,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-13" class="exsec" data-tipo="2" data-nivel="avanzado" data-search="biblioteca (reinicio de inventario) préstamo de libros con una opción para reiniciar el inventario y un contador global de operaciones. 2.13">
@@ -3667,13 +3977,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_13.py</code>
-      <button class="btn-copy" data-code="2_13">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_13">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_13"><code># ===== Ejercicio 2.13 — Biblioteca =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_13.py</code>
+        <button class="btn-copy" data-code="2_13">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_13"><code># ===== Ejercicio 2.13 — Biblioteca =====
 
 CAPACIDAD_MAXIMA = 100
 disponibles = CAPACIDAD_MAXIMA
@@ -3741,6 +4059,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 6.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-14" class="exsec" data-tipo="2" data-nivel="avanzado" data-search="sala de eventos (límite por operación) venta de entradas con un máximo de 10 por transacción y aviso de pocas entradas. 2.14">
@@ -3780,13 +4099,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_14.py</code>
-      <button class="btn-copy" data-code="2_14">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_14">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_14"><code># ===== Ejercicio 2.14 — Sala de Eventos =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_14.py</code>
+        <button class="btn-copy" data-code="2_14">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_14"><code># ===== Ejercicio 2.14 — Sala de Eventos =====
 
 CAPACIDAD_MAXIMA = 250
 MAX_POR_VENTA = 10
@@ -3848,6 +4175,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-15" class="exsec" data-tipo="2" data-nivel="avanzado" data-search="centro de vacunación (lista de espera) agenda dosis; si faltan, agenda las posibles y pone el resto en lista de espera. 2.15">
@@ -3888,13 +4216,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_15.py</code>
-      <button class="btn-copy" data-code="2_15">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_15">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_15"><code># ===== Ejercicio 2.15 — Centro de Vacunación =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_15.py</code>
+        <button class="btn-copy" data-code="2_15">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_15"><code># ===== Ejercicio 2.15 — Centro de Vacunación =====
 
 CAPACIDAD_MAXIMA = 180
 disponibles = CAPACIDAD_MAXIMA
@@ -3960,6 +4296,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 6.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-16" class="exsec" data-tipo="2" data-nivel="complejo" data-search="tienda (monto recaudado) gestiona stock y acumula el monto recaudado por las ventas (precio fijo por producto). 2.16">
@@ -4000,13 +4337,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_16.py</code>
-      <button class="btn-copy" data-code="2_16">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_16">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_16"><code># ===== Ejercicio 2.16 — Tienda =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_16.py</code>
+        <button class="btn-copy" data-code="2_16">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_16"><code># ===== Ejercicio 2.16 — Tienda =====
 
 CAPACIDAD_MAXIMA = 300
 PRECIO = 2990
@@ -4068,6 +4413,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 6.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-17" class="exsec" data-tipo="2" data-nivel="complejo" data-search="estadio (por sectores) vende entradas en dos sectores (tribuna y galería) con historial separado por sector. 2.17">
@@ -4107,13 +4453,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_17.py</code>
-      <button class="btn-copy" data-code="2_17">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_17">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_17"><code># ===== Ejercicio 2.17 — Estadio =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_17.py</code>
+        <button class="btn-copy" data-code="2_17">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_17"><code># ===== Ejercicio 2.17 — Estadio =====
 
 MAX_TRIBUNA = 300
 MAX_GALERIA = 200
@@ -4178,6 +4532,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-18" class="exsec" data-tipo="2" data-nivel="complejo" data-search="centro de datos (estadísticas) asigna servidores y ofrece un panel de estadísticas de uso de la sesión. 2.18">
@@ -4218,13 +4573,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_18.py</code>
-      <button class="btn-copy" data-code="2_18">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_18">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_18"><code># ===== Ejercicio 2.18 — Centro de Datos =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_18.py</code>
+        <button class="btn-copy" data-code="2_18">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_18"><code># ===== Ejercicio 2.18 — Centro de Datos =====
 
 CAPACIDAD_MAXIMA = 200
 disponibles = CAPACIDAD_MAXIMA
@@ -4293,6 +4656,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 6.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-19" class="exsec" data-tipo="2" data-nivel="complejo" data-search="aerolínea (reservas y no-shows) gestiona asientos de un vuelo con registro de pasajeros que no se presentan. 2.19">
@@ -4333,13 +4697,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_19.py</code>
-      <button class="btn-copy" data-code="2_19">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_19">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_19"><code># ===== Ejercicio 2.19 — Aerolínea =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_19.py</code>
+        <button class="btn-copy" data-code="2_19">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_19"><code># ===== Ejercicio 2.19 — Aerolínea =====
 
 CAPACIDAD_MAXIMA = 180
 disponibles = CAPACIDAD_MAXIMA
@@ -4413,6 +4785,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 6.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 <section id="ex-2-20" class="exsec" data-tipo="2" data-nivel="complejo" data-search="bodega (submenú de categorías) gestiona una bodega con tres categorías mediante un menú principal y un submenú de categoría. 2.20">
@@ -4452,13 +4825,21 @@ while True:
 
   </div>
 
-  <div class="code-block">
-    <div class="code-bar">
-      <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
-      <code class="fname">ejercicio2_2_20.py</code>
-      <button class="btn-copy" data-code="2_20">📋 Copiar</button>
+  <div class="sol-toggle-wrap">
+    <button class="btn-sol-toggle" data-code="2_20">
+      <span class="sol-icon">👁</span> Ver una posible solución
+    </button>
+    <div class="sol-warn hidden">
+      <span class="sol-warn-icon">⚠️</span>
+      Recuerda intentar realizar el ejercicio sin ver una de las posibles soluciones
     </div>
-    <pre class="cpre" id="cp-2_20"><code># ===== Ejercicio 2.20 — Bodega =====
+    <div class="code-block hidden">
+      <div class="code-bar">
+        <span class="dots"><i class="dr"></i><i class="dy"></i><i class="dg"></i></span>
+        <code class="fname">ejercicio2_2_20.py</code>
+        <button class="btn-copy" data-code="2_20">📋 Copiar</button>
+      </div>
+      <pre class="cpre" id="cp-2_20"><code># ===== Ejercicio 2.20 — Bodega =====
 
 MAX_REF = 200
 MAX_SEC = 300
@@ -4531,6 +4912,7 @@ while True:
     else:
         print(&quot;¡Opción inválida! Debe ingresar un número del 1 al 5.&quot;)
 </code></pre>
+    </div>
   </div>
 </section>
 
@@ -4621,6 +5003,24 @@ $('#sideList').on('click','.slink',function(e){
   const $t=$($(this).attr('href'));
   if($t.length)$main.stop().animate({scrollTop:$t.position().top+$main.scrollTop()-22},260);
   $('.slink').removeClass('active');$(this).addClass('active');
+});
+
+// ── solution toggle ──
+$('#mainArea').on('click','.btn-sol-toggle',function(){
+  const $btn=$(this);
+  const $wrap=$btn.closest('.sol-toggle-wrap');
+  const $warn=$wrap.find('.sol-warn');
+  const $code=$wrap.find('.code-block');
+  const isOpen=$btn.hasClass('open');
+  if(isOpen){
+    $btn.removeClass('open').html('<span class="sol-icon">👁</span> Ver una posible solución');
+    $warn.addClass('hidden');
+    $code.addClass('hidden');
+  } else {
+    $btn.addClass('open').html('<span class="sol-icon">🙈</span> Ocultar solución');
+    $warn.removeClass('hidden');
+    $code.removeClass('hidden');
+  }
 });
 
 // ── copy ──
